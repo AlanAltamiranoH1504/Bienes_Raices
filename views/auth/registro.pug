@@ -1,2 +1,30 @@
-div
-    h2 Crea tu Cuenta
+extends ../layout/index
+
+block contenido
+    div(class="py-6")
+        h1(class="text-4xl my-10 font-extrabold text-center") Bienes
+            span(class="font-normal")  Raices
+        h2(class="text-center text-2xl font-extrabold")= pagina
+
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-white py-8 px-4 shadow rounded-2xl")
+                form(method="post")
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="nombre") Nombre:
+                        input(id="nombre", name="nombre", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="text", placeholder="Ingresa tu nombre")
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="email") Email:
+                        input(id="email", name="email", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="email", placeholder="Ingresa tu email")
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="password") Password:
+                        input(id="password", name="password", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="password", placeholder="Ingresa tu password")
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="password2") Repetir password:
+                        input(id="password2", name="password2", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="password", placeholder="Confirma tu password")
+                    div(class="mb-4")
+                        input(type="submit", value="Crear Cuenta", class="w-full bg-indigo-600 hover:bg-indigo-700 border border-indigo-600 rounded-md font-bold uppercase py-2 text-white")
+                    div(class="mb-4 flex")
+                        div(class="flex justify-between")
+                            a(href="/auth/login", class="text-gray-500 text-sm") Iniciar Sesión
+                            a(href="/auth/olvide-password", class="text-gray-500 text-sm") Recuperar Password
