@@ -1,0 +1,30 @@
+extends ../layout/index
+
+block contenido
+    div(class="py-6")
+        h1(class="text-4xl my-10 font-extrabold text-center") Bienes
+            span(class="font-normal")  Raices
+        h2(class="text-center text-2xl font-extrabold")=pagina
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-white py-8 px-4 shadow rounded-xl")
+                form(method="post", action="/auth/actualizarPassword")
+                    if error
+                        div(class="bg-red-600 hover:bg-red-700 text-white text-sm uppercase text-center font-bold px-2 py-2 rounded-xl mb-4")=mensaje
+                    else if !error && mensaje
+                        div(class="bg-green-600 hover:bg-green-700 text-white text-sm uppercase text-center font-bold px-2 py-2 rounded-xl mb-4")=mensaje
+
+                    input(type="hidden", name="_csrf", value=csrf)
+                    input(type="hidden", name="email", id="email", value=email)
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="password1") Password:
+                        input(type="password", name="password1", id="password1", class="w-full px-3 py-2 border border-gray-400 rounded-md", placeholder="Nueva password")
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="password2") Confirma tu Password:
+                        input(type="password", name="password2", id="password2", class="w-full px-3 py-2 border border-gray-400 rounded-md", placeholder="Confirma tu password")
+                    div(class="mb-4")
+                        input(type="submit", value="Actualizar Password", class="bg-indigo-600 hover:bg-indigo-700 text-white uppercase text-center font-bold px-2 py-2 w-full rounded-xl")
+            div(class="mb-2")
+                div(class="flex justify-between mt-2")
+                    a(href="/auth/registro", class="text-gray-500 hover:text-gray-600 text-sm") Registrar Cuenta
+                    a(href="/auth/login", class="text-gray-500 hover:text-gray-600 text-sm") Iniciar Sesion

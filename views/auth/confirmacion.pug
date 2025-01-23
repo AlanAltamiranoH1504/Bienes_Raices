@@ -1,0 +1,15 @@
+extends ../layout/index
+
+block contenido
+    div(class="py-6")
+        h1(class="text-4xl my-10 font-extrabold text-center") Bienes
+            span(class="font-normal")  Raices
+        h2(class="text-center text-2xl font-extrabold")=pagina
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-green-600 hover:bg-green-700 text-white font-bold text-center rounded-xl px-4 py-4")=respuesta
+            div(class="mb-2")
+                div(class="flex justify-between mt-2")
+                    a(href="/auth/registro", class="text-gray-500 hover:text-gray-600 text-sm") Registrar Cuenta
+                    a(href="/auth/login", class="text-gray-500 hover:text-gray-600 text-sm") Iniciar Sesion
+                    a(href="/auth/olvide-password", class="text-gray-500 hover:text-gray-600 text-sm") Recuperar Password

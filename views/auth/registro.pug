@@ -9,13 +9,18 @@ block contenido
 
         div(class="mt-8 mx-auto max-w-md")
             div(class="bg-white py-8 px-4 shadow rounded-2xl")
+                if error
+                    p(class="bg-red-600 hover:bg-red-700 text-sm font-bold uppercase mb-4 px-2 py-2 text-center rounded-xl text-white")=mensaje
+                else if !error && mensaje
+                        p(class="bg-green-600 hover:bg-green-700 text-sm font-bold uppercase mb-4 px-2 py-2 text-center rounded-xl text-white")=mensaje
                 form(method="post", action="/auth/registro")
+                    input(type="hidden" name="_csrf" value=csrf)
                     div(class="mb-4")
                         label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="nombre") Nombre:
-                        input(id="nombre", name="nombre", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="text", placeholder="Ingresa tu nombre")
+                        input(id="nombre", name="nombre", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="text", value= usuario ? usuario.nombre:'', placeholder="Ingresa tu nombre")
                     div(class="mb-4")
                         label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="email") Email:
-                        input(id="email", name="email", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="email", placeholder="Ingresa tu email")
+                        input(id="email", name="email", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="email", value=usuario ? usuario.email:'', placeholder="Ingresa tu email")
                     div(class="mb-4")
                         label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="password") Password:
                         input(id="password", name="password", class="w-full px-3 py-2 border border-gray-400 rounded-md", type="password", placeholder="Ingresa tu password")
