@@ -1,8 +1,11 @@
 //Importamos el modelo
 import usuario from "../models/Usuario.js";
+import {generaJWT} from "../helpers/Tokens.js";
 import bcrypt from "bcrypt";
+
 import {generarId} from "../helpers/Tokens.js";
 import {emailRegistro, emailRecuperarPassword} from "../helpers/Emails.js";
+import {underscoredIf} from "sequelize/lib/utils";
 
 //Funciones para el controlador usuario
 const formularioLogion = (req, res) => {
@@ -156,6 +159,62 @@ const actualizarPassword = async (req, res) =>{
     })
 }
 
+const validacionLogion = async (req, res) =>{
+    const {email, password} = req.body;
+    if (email.trim() === "" || email == null || password.trim() === "" || password == null){
+        res.render("auth/login", {
+            error: true,
+            mensaje: "Los campos son obligatorios",
+            pagina: "Iniciar Sesión",
+            csrf: req.csrfToken()
+        });
+        return;
+    }
+
+    const usuarioExistente = await usuario.findOne({where: {email: email}});
+    //Compramos que existe el usuario y que este confirmado
+    if (usuarioExistente === null){
+        res.render("auth/login", {
+            error: true,
+            mensaje: "Usuario no existente",
+            pagina: "Iniciar Sesión",
+            csrf: req.csrfToken()
+        });
+        return;
+    }
+    if(usuarioExistente.confirmado == false || usuarioExistente.confirmado == null){
+        res.render("auth/login", {
+            error: true,
+            mensaje: "No has confirmado tu cuenta",
+            pagina: "Iniciar Sesión",
+            csrf: req.csrfToken()
+        });
+        return;
+    }
+
+    //Si el usuario existe y ya tiene confirmada su cuenta
+    if (usuarioExistente && usuarioExistente.confirmado === true){
+        const correctPassword = await bcrypt.compare(password, usuarioExistente.password);
+        if (correctPassword){
+            //Generamos y guardamos el JWT en una cookie
+            const token = generaJWT(usuarioExistente.id);
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                maxAge: 1000 * 60 * 60
+            }).redirect("/mis-propiedades");
+        }else{
+            res.render("auth/login", {
+                error: true,
+                mensaje: "Tu password es incorrecta",
+                pagina: "Iniciar Sesión",
+                email: email,
+                csrf: req.csrfToken()
+            });
+        }
+    }
+}
+
 export {
     formularioLogion,
     formularioRegistro,
@@ -164,5 +223,6 @@ export {
     confirmar,
     recuperarPassword,
     formularioRecuperacion,
-    actualizarPassword
+    actualizarPassword,
+    validacionLogion
 }

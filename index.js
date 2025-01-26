@@ -2,6 +2,7 @@ import express from 'express';
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 import usuarioRoutes from "./routes/usuarioRoutes.js";
+import propiedadesRoutes from "./routes/propiedadesRoutes.js";
 import conexion from "./config/db.js";
 const app = express();
 
@@ -20,6 +21,10 @@ app.use(express.static("public"));
 
 //Definimos las rutas para usuario
 app.use("/auth", usuarioRoutes);
+//Definimos rutass para propiedades
+app.use("/", propiedadesRoutes);
+
+
 //Probamos conexion a la db
 conexion.authenticate().then(() =>{
     console.log("Conexion correcta a la db")
