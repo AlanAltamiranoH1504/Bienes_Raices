@@ -1,0 +1,60 @@
+extends ../layout/index
+
+block contenido
+    div(class="py-0")
+        h1(class="text-4xl my-10 font-extrabold text-center") Bienes
+            span(class="font-normal")  Raices
+        h2(class="text-center text-2xl font-extrabold")=pagina
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-white py-8 px-4 shadow rounded-2xl")
+                form(method="post", action="#")
+                    input(name="_csrf", value=csrf, type="hidden")
+                    div(class="mb-4")
+                        h2(class="font-bold text-center uppercase") Información General
+                        p(class="text-gray-500 mt-2 text-sm") Añade informacion sobre la propiedad en venta:
+
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="titulo") Titulo del Anucion:
+                        input(type="text", name="titulo", id="titulo", class="w-full border py-1 px-3 rounded-md", placeholder="Titulo")
+
+                    div(class="mb-4")
+                        label(for="categoria", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Categoria
+                        select(name="categoria", id="categoria", class="w-full border py-1 px-3 rounded-md")
+                            option(value="") Selecciona una categoria
+
+                    div(class="mb-4")
+                        label(for="precio", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Precio
+                        select(name="precio", id="precio", class="w-full border py-1 px-3 rounded-md")
+                            option(value="") Selecciona un precio
+
+                    div(class="mb-4")
+                        label(for="habitaciones", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Habitaciones
+                        select(name="habitaciones", id="habitaciones", class="w-full border py-1 px-3 rounded-md")
+                            option(value="") Número de habitaciones
+                            - let n = 1;
+                                while n <= 5
+                                    option(value=n) #{n}
+                                    - n++
+
+                    div(class="mb-4")
+                        label(for="estacionamiento", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Estacionamiento
+                        select(name="estacionamiento", id="estacionamiento", class="w-full border py-1 px-3 rounded-md")
+                            option(value="") Número de estacionamientos
+                            - let n1 = 1;
+                                while n1 <= 4
+                                    option(value=n1) #{n1}
+                                    - n1++
+
+                    div(class="mb-4")
+                        label(for="wc", class="block text-sm uppercase text-gray-500 mb-2 font-bold") WC
+                        select(name="wc", id="wc", class="w-full border py-1 px-3 rounded-md")
+                            option(value="") Número de wc's
+                            - let n2 = 1;
+                                while n2 <= 5
+                                    option(value=n2) #{n2}
+                                    - n2++
+
+
+
+

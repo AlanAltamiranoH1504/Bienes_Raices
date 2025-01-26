@@ -7,6 +7,15 @@ const admin = (req, res) =>{
     });
 }
 
+const formCrearPropiedad = (req, res) =>{
+    res.render("propiedades/formCrearPropiedad", {
+        pagina: "Crear Nueva Propiedad",
+        barra: true,
+        csrf: req.csrfToken()
+    })
+}
+
 export {
-    admin
+    admin,
+    formCrearPropiedad
 }
