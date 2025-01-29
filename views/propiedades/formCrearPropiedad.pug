@@ -1,46 +1,66 @@
 extends ../layout/index
 
+block styles
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
+
 block contenido
     div(class="py-0")
         h1(class="text-4xl my-10 font-extrabold text-center") Bienes
             span(class="font-normal")  Raices
         h2(class="text-center text-2xl font-extrabold")=pagina
 
-        div(class="mt-8 mx-auto max-w-md")
+        div(class="mt-8 mb-6 mx-auto max-w-[700px]")
             div(class="bg-white py-8 px-4 shadow rounded-2xl")
-                form(method="post", action="#")
+                form(method="post", action="/guardarPropiedad")
+
                     input(name="_csrf", value=csrf, type="hidden")
                     div(class="mb-4")
                         h2(class="font-bold text-center uppercase") Información General
                         p(class="text-gray-500 mt-2 text-sm") Añade informacion sobre la propiedad en venta:
+                        if error
+                            div(class="bg-red-600 hover:bg-red-700 text-white font-bold uppercase py-1.5 px-2 mt-2 text-center rounded-md")=msg
 
                     div(class="mb-4")
                         label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="titulo") Titulo del Anucion:
-                        input(type="text", name="titulo", id="titulo", class="w-full border py-1 px-3 rounded-md", placeholder="Titulo")
+                        input(type="text", name="titulo", id="titulo", class="w-full border py-1 px-3 rounded-md", placeholder="Titulo", value=formulario.titulo ? formulario.titulo:'' )
 
+                    div(class="mb-4")
+                        label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="titulo") Descripción del Anucion:
+                        textarea(name="descripcion" id="descripcion" class="w-full border py-1 px-3 rounded-md" placeholder="Descripcion" rows="5" cols="30")
+                            if formulario.descripcion
+                                = formulario.descripcion
+                            else
+                                = ''
                     div(class="mb-4")
                         label(for="categoria", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Categoria
                         select(name="categoria", id="categoria", class="w-full border py-1 px-3 rounded-md")
                             option(value="") Selecciona una categoria
+                            if categorias && categorias.length >= 1
+                                each categoria in categorias
+                                    option(value=categoria.id)=categoria.nombre
+
 
                     div(class="mb-4")
                         label(for="precio", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Precio
                         select(name="precio", id="precio", class="w-full border py-1 px-3 rounded-md")
                             option(value="") Selecciona un precio
+                            if precios && precios.length >= 1
+                                each precio in precios
+                                    option(value=precio.id)=precio.nombre
 
                     div(class="mb-4")
                         label(for="habitaciones", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Habitaciones
                         select(name="habitaciones", id="habitaciones", class="w-full border py-1 px-3 rounded-md")
-                            option(value="") Número de habitaciones
+                            option(value= formulario.habitaciones ? formulario.habitaciones:'') Número de habitaciones
                             - let n = 1;
                                 while n <= 5
                                     option(value=n) #{n}
                                     - n++
 
                     div(class="mb-4")
-                        label(for="estacionamiento", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Estacionamiento
+                        label(for="estacionamiento", class="block text-sm uppercase text-gray-500 mb-2 font-bold") Estacionamientos
                         select(name="estacionamiento", id="estacionamiento", class="w-full border py-1 px-3 rounded-md")
-                            option(value="") Número de estacionamientos
+                            option(value=formulario.estacionamiento ? formulario.estacionamiento:'') Número de estacionamientos
                             - let n1 = 1;
                                 while n1 <= 4
                                     option(value=n1) #{n1}
@@ -49,11 +69,27 @@ block contenido
                     div(class="mb-4")
                         label(for="wc", class="block text-sm uppercase text-gray-500 mb-2 font-bold") WC
                         select(name="wc", id="wc", class="w-full border py-1 px-3 rounded-md")
-                            option(value="") Número de wc's
+                            option(value=formulario.wc ? formulario.wc:'') Número de wc's
                             - let n2 = 1;
                                 while n2 <= 5
                                     option(value=n2) #{n2}
                                     - n2++
+
+                    div(class="border-gray-400 border-t py-4")
+                        h2(class="font-bold text-center uppercase") Ubicación
+                        p(class="text-gray-500 mt-2 text-sm") Define la ubicacion de la propiedad en venta
+                        div(id="mapa", class="h-96 mt-3")
+
+                        div(class="mt-2")
+                            p(class="text-gray-500 mt-2 text-sm font-bold", id="p_calle") Calle:
+
+                        input(type="hidden", name="calle", id="calle")
+                        input(type="hidden", name="lat", id="lat")
+                        input(type="hidden", name="lng", id="lng")
+
+                    input(type="submit", value="Guardar Propiedad", class="bg-green-600 hover:bg-green-700 text-white font-bold uppercase py-2 mx-4 rounded-xl w-full")
+
+
 block scripts
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
     script(src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js")
