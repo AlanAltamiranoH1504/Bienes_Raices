@@ -1,5 +1,5 @@
-import categoria from "../models/Categoria.js";
-import precio from "../models/Precio.js";
+import categoriaModelo from "../models/Categoria.js";
+import precioModelo from "../models/Precio.js";
 
 const admin = (req, res) =>{
     // res.send("Desde la pagina home de propiedades")
@@ -10,8 +10,8 @@ const admin = (req, res) =>{
 }
 
 const formCrearPropiedad = async (req, res) =>{
-    const categorias = await categoria.findAll();
-    const precios = await precio.findAll();
+    const categorias = await categoriaModelo.findAll();
+    const precios = await precioModelo.findAll();
     res.render("propiedades/formCrearPropiedad", {
         pagina: "Crear Nueva Propiedad",
         barra: true,
@@ -22,7 +22,9 @@ const formCrearPropiedad = async (req, res) =>{
     })
 }
 
-const guardarPropiedad = (req, res) =>{
+const guardarPropiedad = async (req, res) =>{
+    const categorias = await categoriaModelo.findAll();
+    const precios = await precioModelo.findAll();
     const {titulo, descripcion, categoria, precio, habitaciones, estacionamiento, wc, calle, lat, lng} = req.body;
     const formulario = {
         titulo,
@@ -44,7 +46,9 @@ const guardarPropiedad = (req, res) =>{
             error: true,
             msg: "El titulo se encuetra vacio",
             csrf: req.csrfToken(),
-            formulario
+            formulario,
+            categorias,
+            precios
         });
         return;
     }
@@ -55,10 +59,41 @@ const guardarPropiedad = (req, res) =>{
             error: true,
             msg: "La descripcion se encuentra vacia o es muy larga",
             csrf: req.csrfToken(),
-            formulario
+            formulario,
+            categorias,
+            precios
         });
         return;
     }
+
+    if (categoria.trim() === "" || categoria === null || descripcion.length > 500){
+        res.render("propiedades/formCrearPropiedad", {
+            pagina: "Crear Nueva Propiedad",
+            barra: true,
+            error: true,
+            msg: "No se ha seleccionado una categoria",
+            csrf: req.csrfToken(),
+            formulario,
+            categorias,
+            precios
+        });
+        return;
+    }
+
+    if (precio.trim() === "" || precio === null || descripcion.length > 500){
+        res.render("propiedades/formCrearPropiedad", {
+            pagina: "Crear Nueva Propiedad",
+            barra: true,
+            error: true,
+            msg: "No se ha seleccionado un precio",
+            csrf: req.csrfToken(),
+            formulario,
+            categorias,
+            precios
+        });
+        return;
+    }
+
     if (habitaciones.trim() == "" || habitaciones === null){
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
@@ -66,7 +101,9 @@ const guardarPropiedad = (req, res) =>{
             error: true,
             msg: "No se han definido las habitaciones",
             csrf: req.csrfToken(),
-            formulario
+            formulario,
+            categorias,
+            precios
         });
         return;
     }
@@ -78,7 +115,9 @@ const guardarPropiedad = (req, res) =>{
             error: true,
             msg: "No se han definido los estacionamientos",
             csrf: req.csrfToken(),
-            formulario
+            formulario,
+            categorias,
+            precios
         });
         return;
     }
@@ -89,7 +128,22 @@ const guardarPropiedad = (req, res) =>{
             error: true,
             msg: "No se han definido el numero de wc's",
             csrf: req.csrfToken(),
-            formulario
+            formulario,
+            categorias,
+            precios
+        });
+        return;
+    }
+    if (calle.trim() == "" || calle === null){
+        res.render("propiedades/formCrearPropiedad", {
+            pagina: "Crear Nueva Propiedad",
+            barra: true,
+            error: true,
+            msg: "No se ha definido la ubicacion",
+            csrf: req.csrfToken(),
+            formulario,
+            categorias,
+            precios
         });
         return;
     }
