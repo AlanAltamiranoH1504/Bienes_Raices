@@ -1,7 +1,8 @@
 import categoriaModelo from "../models/Categoria.js";
 import precioModelo from "../models/Precio.js";
+import {Propiedad} from "../models/index.js";
 
-const admin = (req, res) =>{
+const admin = (req, res) => {
     // res.send("Desde la pagina home de propiedades")
     res.render("propiedades/admin", {
         pagina: "Mis propiedades",
@@ -9,7 +10,7 @@ const admin = (req, res) =>{
     });
 }
 
-const formCrearPropiedad = async (req, res) =>{
+const formCrearPropiedad = async (req, res) => {
     const categorias = await categoriaModelo.findAll();
     const precios = await precioModelo.findAll();
     res.render("propiedades/formCrearPropiedad", {
@@ -22,7 +23,7 @@ const formCrearPropiedad = async (req, res) =>{
     })
 }
 
-const guardarPropiedad = async (req, res) =>{
+const guardarPropiedad = async (req, res) => {
     const categorias = await categoriaModelo.findAll();
     const precios = await precioModelo.findAll();
     const {titulo, descripcion, categoria, precio, habitaciones, estacionamiento, wc, calle, lat, lng} = req.body;
@@ -39,7 +40,7 @@ const guardarPropiedad = async (req, res) =>{
         lng
     };
 
-    if (titulo.trim() === "" || titulo === null){
+    if (titulo.trim() === "" || titulo === null) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -52,7 +53,7 @@ const guardarPropiedad = async (req, res) =>{
         });
         return;
     }
-    if (descripcion.trim() === "" || descripcion === null || descripcion.length > 500){
+    if (descripcion.trim() === "" || descripcion === null || descripcion.length > 500) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -66,7 +67,7 @@ const guardarPropiedad = async (req, res) =>{
         return;
     }
 
-    if (categoria.trim() === "" || categoria === null || descripcion.length > 500){
+    if (categoria.trim() === "" || categoria === null || descripcion.length > 500) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -80,7 +81,7 @@ const guardarPropiedad = async (req, res) =>{
         return;
     }
 
-    if (precio.trim() === "" || precio === null || descripcion.length > 500){
+    if (precio.trim() === "" || precio === null || descripcion.length > 500) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -94,7 +95,7 @@ const guardarPropiedad = async (req, res) =>{
         return;
     }
 
-    if (habitaciones.trim() == "" || habitaciones === null){
+    if (habitaciones.trim() == "" || habitaciones === null) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -108,7 +109,7 @@ const guardarPropiedad = async (req, res) =>{
         return;
     }
 
-    if (estacionamiento.trim() == "" || estacionamiento === null){
+    if (estacionamiento.trim() == "" || estacionamiento === null) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -121,7 +122,7 @@ const guardarPropiedad = async (req, res) =>{
         });
         return;
     }
-    if (wc.trim() == "" || wc === null){
+    if (wc.trim() == "" || wc === null) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -134,7 +135,7 @@ const guardarPropiedad = async (req, res) =>{
         });
         return;
     }
-    if (calle.trim() == "" || calle === null){
+    if (calle.trim() == "" || calle === null) {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -147,8 +148,41 @@ const guardarPropiedad = async (req, res) =>{
         });
         return;
     }
-    console.log("Guardando la propiedad");
-    console.log(formulario)
+    const propiedadGuardada = Propiedad.create({
+        titulo,
+        descripcion,
+        habitaciones,
+        estacionamiento,
+        wc,
+        calle,
+        lat,
+        lng,
+        imagen: "Imagen equis",
+        categoria_id: categoria,
+        precio_id: precio,
+        usuario_id: 21
+    });
+    if (propiedadGuardada !== null){
+        res.render("propiedades/formCrearPropiedad", {
+            pagina: "Crear Nueva Propiedad",
+            barra: true,
+            error: false,
+            msg: "Propiedad creada de manera correcta!",
+            csrf: req.csrfToken(),
+            formulario
+        });
+    }else{
+        res.render("propiedades/formCrearPropiedad", {
+            pagina: "Crear Nueva Propiedad",
+            barra: true,
+            error: true,
+            msg: "Error al crear la propiedad",
+            csrf: req.csrfToken(),
+            formulario,
+            categorias,
+            precios
+        });
+    }
 }
 
 export {

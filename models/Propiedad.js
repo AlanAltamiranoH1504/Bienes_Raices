@@ -1,7 +1,7 @@
 import sequelize from "sequelize";
 import conexion from "../config/db.js";
 
-const propiedad = conexion.define("propiedad", {
+const propiedad = conexion.define("propiedades", {
     titulo: {
         type: sequelize.STRING(50),
         required: true
@@ -10,14 +10,6 @@ const propiedad = conexion.define("propiedad", {
         type: sequelize.STRING(500),
         required: true
     },
-    // categoria:{
-    //     type: sequelize.STRING,
-    //     required: true
-    // },
-    // precio: {
-    //     type: sequelize.STRING,
-    //     required: true
-    // },
     habitaciones:{
         type: sequelize.INTEGER,
         required: true
@@ -48,8 +40,15 @@ const propiedad = conexion.define("propiedad", {
     },
     publicado:{
         type: sequelize.BOOLEAN,
-        allowNull: false,
         default: false
-    }
+    },
+    categoria_id:{
+        type: sequelize.INTEGER,
+        required: true,
+    },
+    precio_id: {
+        type: sequelize.INTEGER,
+        required: true
+    },
 });
 export default propiedad;

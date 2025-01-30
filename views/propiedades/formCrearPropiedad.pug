@@ -19,6 +19,8 @@ block contenido
                         p(class="text-gray-500 mt-2 text-sm") Añade informacion sobre la propiedad en venta:
                         if error
                             div(class="bg-red-600 hover:bg-red-700 text-white font-bold uppercase py-1.5 px-2 mt-2 text-center rounded-md")=msg
+                        else if(!error && msg === "Propiedad creada de manera correcta!")
+                            div(class="bg-green-600 hover:bg-green-700 text-white font-bold uppercase py-1.5 px-2 mt-2 text-center rounded-md")=msg
 
                     div(class="mb-4")
                         label(class="block text-sm uppercase text-gray-500 mb-2 font-bold", for="titulo") Titulo del Anucion:
