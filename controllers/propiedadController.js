@@ -1,9 +1,11 @@
 import categoriaModelo from "../models/Categoria.js";
 import precioModelo from "../models/Precio.js";
+import usuarioSesion from "../helpers/UsuarioSesion.js";
+import jwt from "jsonwebtoken";
 import {Propiedad} from "../models/index.js";
 
-const admin = (req, res) => {
-    // res.send("Desde la pagina home de propiedades")
+const admin = async (req, res) => {
+
     res.render("propiedades/admin", {
         pagina: "Mis propiedades",
         barra: true
@@ -27,6 +29,13 @@ const guardarPropiedad = async (req, res) => {
     const categorias = await categoriaModelo.findAll();
     const precios = await precioModelo.findAll();
     const {titulo, descripcion, categoria, precio, habitaciones, estacionamiento, wc, calle, lat, lng} = req.body;
+
+    //Sacamos el id del usuario que se encuentra en sesion actual
+    const token = req.cookies.token;
+    const decodificacion = jwt.verify(token, process.env.JWT_SECRET);
+    const {id} = decodificacion;
+    console.log(id)
+
     const formulario = {
         titulo,
         descripcion,
@@ -148,7 +157,7 @@ const guardarPropiedad = async (req, res) => {
         });
         return;
     }
-    const propiedadGuardada = Propiedad.create({
+    const propiedadGuardada = await Propiedad.create({
         titulo,
         descripcion,
         habitaciones,
@@ -160,7 +169,7 @@ const guardarPropiedad = async (req, res) => {
         imagen: "Imagen equis",
         categoria_id: categoria,
         precio_id: precio,
-        usuario_id: 21
+        usuario_id: id
     });
     if (propiedadGuardada !== null){
         res.render("propiedades/formCrearPropiedad", {
