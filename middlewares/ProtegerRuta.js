@@ -15,7 +15,11 @@ const protegerRuta = async (req, res, next) =>{
             res.redirect('/auth/login');
         }
         const usuarioDb = await usuario.findOne({where: id});
-        next();
+        if(usuarioDb !== null){
+            next();
+        }else{
+            res.redirect("auth/login");
+        }
     }catch (e){
         console.log("Error: " + e.message());
         return res.clearCookie("token").redirect("/auth/login");

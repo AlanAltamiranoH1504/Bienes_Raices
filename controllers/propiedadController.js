@@ -34,7 +34,6 @@ const guardarPropiedad = async (req, res) => {
     const token = req.cookies.token;
     const decodificacion = jwt.verify(token, process.env.JWT_SECRET);
     const {id} = decodificacion;
-    console.log(id)
 
     const formulario = {
         titulo,
