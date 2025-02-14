@@ -14,8 +14,9 @@ block contenido
                 div(class="mb-4")
                     h2(class="font-bold text-center uppercase") Informacion General
                     p(class="text-gray-500 mt-2 text-sm") Añade la imagen de tu propiedad
-                form(method="post", action="propiedades/agregar-imagen", class="dropzone")
+                form(method="post", action=`/propiedades/guardar_imagen/${id_propiedad}`, class="dropzone" id="imagen")
                     input(name="_csrf", value=csrf, type="hidden")
+                    input(name="id_propiedad", value=id_propiedad, type="hidden")
 
                     div(class="mb-4")
                         input(type="submit", value="Publicar Propiedad", class="bg-green-600 hover:bg-green-700 text-center text-white uppercase font-bold rounded-xl w-full py-2")

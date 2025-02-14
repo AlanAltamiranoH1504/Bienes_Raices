@@ -200,10 +200,6 @@ const agregarImagen = async (req, res) =>{
         });
         return;
     }
-    const {usuario_id} = propiedadExistente;
-    const token_sesion = req.cookies.token;
-    const token_decodificado = jwt.decode(token_sesion);
-    const id_sesion = token_decodificado.id;
 
     //Validamos que la propiedad no esta publicada
     const {publicado} = propiedadExistente;
@@ -217,6 +213,11 @@ const agregarImagen = async (req, res) =>{
     }
 
     //Verificamos que el usuario en sesion sea el dueño de la propiedad
+    const {usuario_id} = propiedadExistente;
+    const token_sesion = req.cookies.token;
+    const token_decodificado = jwt.decode(token_sesion);
+    const id_sesion = token_decodificado.id;
+
     if (usuario_id !== id_sesion){
         console.log("El usuario en sesion no es dueño de la propiedad")
         res.render("propiedades/admin", {
@@ -227,15 +228,16 @@ const agregarImagen = async (req, res) =>{
     }
     console.log("La propiedad existe, no esta publicada y el usuario en sesion es su dueño")
     res.render('propiedades/agregar-imagen', {
-        id,
-        pagina: 'Agregar Imagen',
+        id_propiedad: id,
+        pagina: `Agregar imagen de: ${propiedadExistente.titulo}`,
         barra: true,
         csrf: req.csrfToken()
     });
 }
 
 const agregarImagenDB = (req, res) =>{
-
+    const id_propiedad = req.body.id_propiedad;
+    res.send("Guardando la imagen de la propiedad: " + id_propiedad)
 }
 
 export {

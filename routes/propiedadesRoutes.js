@@ -13,6 +13,6 @@ router.get("/mis-propiedades", protegerRuta, admin);
 router.get("/propiedades/crear", protegerRuta, formCrearPropiedad);
 router.post("/guardarPropiedad", protegerRuta, guardarPropiedad);
 router.get("/propiedades/agregar-imagen/:id", protegerRuta, agregarImagen);
-router.post("/propiedades/agregar-imagen", protegerRuta, agregarImagenDB);
+router.post("/propiedades/guardar_imagen/:id", protegerRuta, agregarImagenDB);
 
 export default router;
