@@ -171,14 +171,8 @@ const guardarPropiedad = async (req, res) => {
         usuario_id: id
     });
     if (propiedadGuardada !== null){
-        res.render("propiedades/formCrearPropiedad", {
-            pagina: "Crear Nueva Propiedad",
-            barra: true,
-            error: false,
-            msg: "Propiedad creada de manera correcta!",
-            csrf: req.csrfToken(),
-            formulario
-        });
+        const {id} = propiedadGuardada;
+        res.redirect(`/propiedades/agregar-imagen/${id}`);
     }else{
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
@@ -193,8 +187,61 @@ const guardarPropiedad = async (req, res) => {
     }
 }
 
+const agregarImagen = async (req, res) =>{
+    const id = req.params.id;
+
+    //Validamos que la propiedad existe
+    const propiedadExistente = await Propiedad.findOne({where: {id}});
+    if (!propiedadExistente){
+        console.log("La propiedad no existe")
+        res.render("propiedades/admin", {
+            pagina: "Mis propiedades",
+            barra: true
+        });
+        return;
+    }
+    const {usuario_id} = propiedadExistente;
+    const token_sesion = req.cookies.token;
+    const token_decodificado = jwt.decode(token_sesion);
+    const id_sesion = token_decodificado.id;
+
+    //Validamos que la propiedad no esta publicada
+    const {publicado} = propiedadExistente;
+    if (publicado === true){
+        console.log("La propiedad ya esta publicada")
+        res.render("propiedades/admin", {
+            pagina: "Mis propiedades",
+            barra: true
+        });
+        return;
+    }
+
+    //Verificamos que el usuario en sesion sea el dueño de la propiedad
+    if (usuario_id !== id_sesion){
+        console.log("El usuario en sesion no es dueño de la propiedad")
+        res.render("propiedades/admin", {
+            pagina: "Mis propiedades",
+            barra: true
+        });
+        return;
+    }
+    console.log("La propiedad existe, no esta publicada y el usuario en sesion es su dueño")
+    res.render('propiedades/agregar-imagen', {
+        id,
+        pagina: 'Agregar Imagen',
+        barra: true,
+        csrf: req.csrfToken()
+    });
+}
+
+const agregarImagenDB = (req, res) =>{
+
+}
+
 export {
     admin,
     formCrearPropiedad,
-    guardarPropiedad
+    guardarPropiedad,
+    agregarImagen,
+    agregarImagenDB
 }

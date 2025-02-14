@@ -1,0 +1,25 @@
+extends ../layout/index
+
+block styles
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.css")
+
+block contenido
+    div(class="py-0")
+        h1(class="text-4xl my-10 font-extrabold text-center") Bienes
+            span(class="font-normal")  Raices
+        h2(class="text-center text-2xl font-extrabold")=pagina
+
+        div(class="mt-8 mb-6 mx-auto max-w-[700px]")
+            div(class="bg-white py-8 px-4 shadow rounded-2xl")
+                div(class="mb-4")
+                    h2(class="font-bold text-center uppercase") Informacion General
+                    p(class="text-gray-500 mt-2 text-sm") Añade la imagen de tu propiedad
+                form(method="post", action="propiedades/agregar-imagen", class="dropzone")
+                    input(name="_csrf", value=csrf, type="hidden")
+
+                    div(class="mb-4")
+                        input(type="submit", value="Publicar Propiedad", class="bg-green-600 hover:bg-green-700 text-center text-white uppercase font-bold rounded-xl w-full py-2")
+
+
+block scripts
+    script(src="/js/agregarImagen.js")
