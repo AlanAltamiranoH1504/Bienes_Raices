@@ -270,8 +270,14 @@ const agregarImagenDB = async (req, res) =>{
         });
         return;
     }
-    console.log("La propiedad existe, no esta publciada y el usuario es sesion es su dueño. Subiendo la img");
-
+    try{
+        //Guardamos la img de la propiedad y cambiamos el estado de publicado
+        propiedadExistente.imagen = req.file.filename;
+        propiedadExistente.publicado = true;
+        await propiedadExistente.save();
+    }catch (e){
+        console.log("Error: " + e)
+    }
 }
 
 export {
