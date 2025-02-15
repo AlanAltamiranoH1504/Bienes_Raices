@@ -19,5 +19,19 @@ Dropzone.options.imagen = {
     headers: {
         'CSRF-Token': value_token
     },
-    paramName: 'imagen'
+    paramName: 'imagen',
+    init: function (){
+        //Guardamos los archivos cuando se da click en el boton para guardar archivos
+        const dropZone = this;
+        const btnPublicar = document.querySelector("#publicar");
+
+        btnPublicar.addEventListener("click", () =>{
+            dropZone.processQueue()
+        });
+        dropZone.on('queuecomplete', function (){
+            if (dropZone.getActiveFiles().length == 0){
+                window.location.href = '/mis-propiedades';
+            }
+        });
+    }
 }
