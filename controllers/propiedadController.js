@@ -189,11 +189,11 @@ const guardarPropiedad = async (req, res) => {
 
 const agregarImagen = async (req, res) =>{
     const id = req.params.id;
-
     //Validamos que la propiedad existe
-    const propiedadExistente = await Propiedad.findOne({where: {id}});
+    const propiedadExistente = await Propiedad.findByPk(id);
+
     if (!propiedadExistente){
-        console.log("La propiedad no existe")
+        console.log("La propiedad no existe. Entra aqui")
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
             barra: true
@@ -202,7 +202,7 @@ const agregarImagen = async (req, res) =>{
     }
 
     //Validamos que la propiedad no esta publicada
-    const {publicado} = propiedadExistente;
+    const publicado = propiedadExistente.publicado;
     if (publicado === true){
         console.log("La propiedad ya esta publicada")
         res.render("propiedades/admin", {
@@ -213,7 +213,7 @@ const agregarImagen = async (req, res) =>{
     }
 
     //Verificamos que el usuario en sesion sea el dueño de la propiedad
-    const {usuario_id} = propiedadExistente;
+    const usuario_id = propiedadExistente.usuario_id;
     const token_sesion = req.cookies.token;
     const token_decodificado = jwt.decode(token_sesion);
     const id_sesion = token_decodificado.id;
@@ -226,7 +226,6 @@ const agregarImagen = async (req, res) =>{
         });
         return;
     }
-    console.log("La propiedad existe, no esta publicada y el usuario en sesion es su dueño")
     res.render('propiedades/agregar-imagen', {
         id_propiedad: id,
         pagina: `Agregar imagen de: ${propiedadExistente.titulo}`,
@@ -235,9 +234,44 @@ const agregarImagen = async (req, res) =>{
     });
 }
 
-const agregarImagenDB = (req, res) =>{
+const agregarImagenDB = async (req, res) =>{
     const id_propiedad = req.body.id_propiedad;
-    res.send("Guardando la imagen de la propiedad: " + id_propiedad)
+
+
+    //Verificamos que la propiedad exista
+    const propiedadExistente = await Propiedad.findOne({where: {id: id_propiedad}});
+    if (!propiedadExistente){
+        console.log("La propiedad no existe en la db");
+        res.render("propiedades/admin", {
+            pagina: "Mis propiedades",
+            barra: true
+        });
+        return;
+    }
+
+    //Verificamos que el estado de la propiedad no sea publicado
+    const publicado = propiedadExistente.publicado;
+    if (publicado !== false){
+        console.log("La propiedad ya esta publicada");
+        res.render("propiedades/admin", {
+            pagina: "Mis propiedades",
+            barra: true
+        });
+        return;
+    }
+    //Verificamos que el usuario en sesion sea el dueño de la propiedad
+    const id_sesion = req.cookies.token;
+    const token_decodificado = jwt.decode(id_sesion);
+    if (propiedadExistente.usuario_id !== token_decodificado.id){
+        console.log("El usuario en sesion no es dueño de la propiedad");
+        res.render("propiedades/admin", {
+            pagina: "Mis propiedades",
+            barra: true
+        });
+        return;
+    }
+    console.log("La propiedad existe, no esta publciada y el usuario es sesion es su dueño. Subiendo la img");
+
 }
 
 export {
