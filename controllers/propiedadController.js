@@ -2,13 +2,23 @@ import categoriaModelo from "../models/Categoria.js";
 import precioModelo from "../models/Precio.js";
 import usuarioSesion from "../helpers/UsuarioSesion.js";
 import jwt from "jsonwebtoken";
-import {Propiedad} from "../models/index.js";
+import {Categoria, Precio, Propiedad} from "../models/index.js";
 
 const admin = async (req, res) => {
+    //Sacamos las propiedades del usuario en sesion
+    const cookie_token = req.cookies.token;
+    const token_decodificado = jwt.decode(cookie_token);
+    const {id} = token_decodificado;
 
+    //Sacamos las propiedades con consulta multitabla
+    const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id}, include: [
+            {model: Categoria, attributes: ['id',  'nombre']},
+            {model: Precio, attributes: ['id',  'nombre']},
+        ]});
     res.render("propiedades/admin", {
         pagina: "Mis propiedades",
-        barra: true
+        barra: true,
+        propiedades: propiedadesUsuario
     });
 }
 
@@ -275,9 +285,20 @@ const agregarImagenDB = async (req, res) =>{
         propiedadExistente.imagen = req.file.filename;
         propiedadExistente.publicado = true;
         await propiedadExistente.save();
+        // setTimeout(() =>{
+        //     res.redirect("/mis-propiedades");
+        // }, 3000);
     }catch (e){
         console.log("Error: " + e)
     }
+}
+
+const editarPropiedad = (req, res) =>{
+    res.send("Editando propiedad con id: " + req.params.id);
+}
+
+const eliminarPropiedad = (req, res) =>{
+    res.send("Eliminando propiedad con id: " + req.params.id);
 }
 
 export {
@@ -285,5 +306,7 @@ export {
     formCrearPropiedad,
     guardarPropiedad,
     agregarImagen,
-    agregarImagenDB
+    agregarImagenDB,
+    editarPropiedad,
+    eliminarPropiedad
 }
