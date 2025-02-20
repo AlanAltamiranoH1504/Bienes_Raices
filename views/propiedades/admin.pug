@@ -27,11 +27,11 @@ block contenido
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                                             p(class="text-sm text-black font-bold")=propiedad.precio.nombre
                                     div(class="sm:w-1/4 md:w-2/6 lg:w-1/6")
+                                        //p(class=`px-2 py-2 md:py-1 uppercase leading-5 font-semibold rounded-sm`)
                                         form(action="#")
-                                            input(type="submit" class="px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-sm #{propiedad.publicado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}", value=`${propiedad.publicado ? 'Publicado': 'No Publicado'}`)
-
-                                        a(href=`/propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center block py-2") Editar
-                                        a(href=`/eliminar-propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center block") Eliminar
+                                            input(type="submit" class="px-2 py-2 md:py-1 uppercase leading-5 font-semibold rounded-sm ${propiedad.publicado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}", value=`${propiedad.publicado ? 'Publicado': 'No Publicado'}`)
+                                        a(href=`/propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center block py-1 bg-indigo-300 text-indigo-600 rounded hover:bg-indigo-400 my-2") Editar
+                                        a(href=`/eliminar-propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center py-1 block bg-red-300 text-red-600 rounded hover:bg-red-400") Eliminar
         else
             div(class="container my-4")
                 div(class="bg-green-600 hover:bg-green-700 text-white uppercase font-bold px-4 py-2 text-center max-w-md mx-auto rounded-md") Actualmente no cuentas con propiedades
