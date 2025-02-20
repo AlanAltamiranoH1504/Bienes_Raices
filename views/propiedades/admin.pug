@@ -8,3 +8,30 @@ block contenido
         h3(class="text-center text-xl font-bold mb-5")=usuario
 
         a(href="/propiedades/crear", class="bg-indigo-600 hover:bg-indigo-700 rounded-xl text-center text-white px-10 py-2 uppercase font-bold inline-block w-full md:w-auto text-sm") Publicar Propiedad
+        if (propiedades && propiedades !== null)
+            //pre= JSON.stringify(propiedades, undefined, 2)
+            div(class="container mt-4")
+                div(class="bg-green-600 hover:bg-green-700 text-white uppercase font-bold px-4 py-2 text-center max-w-md mx-auto rounded-md") Estas son tus propiedades
+            div(class="container mt-4 mb-4")
+                each propiedad in propiedades
+                    div(class="bg-white shadow rounded-lg")
+                        ul(class="divide-y divide-gray-200")
+                            li
+                                div(class="mt-3 p-6 w-full flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-8 gap-4")
+                                    div(class="sm:w-1/4 md:w-1/6")
+                                        img(src=`uploads/${propiedad.imagen}`, class="w-full block")
+                                    div(class="sm:w-2/4 md:w-3/6 lg:w-4/6")
+                                        a(href="#", class="block text-2xl font-extrabold truncate")=propiedad.titulo
+                                        p(class="text-sm text-black font-bold")=propiedad.categoria.nombre
+                                        div(class="flex items-center")
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                            p(class="text-sm text-black font-bold")=propiedad.precio.nombre
+                                    div(class="sm:w-1/4 md:w-2/6 lg:w-1/6")
+                                        form(action="#")
+                                            input(type="submit" class="px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-sm #{propiedad.publicado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}", value=`${propiedad.publicado ? 'Publicado': 'No Publicado'}`)
+
+                                        a(href=`/propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center block py-2") Editar
+                                        a(href=`/eliminar-propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center block") Eliminar
+        else
+            div(class="container my-4")
+                div(class="bg-green-600 hover:bg-green-700 text-white uppercase font-bold px-4 py-2 text-center max-w-md mx-auto rounded-md") Actualmente no cuentas con propiedades
