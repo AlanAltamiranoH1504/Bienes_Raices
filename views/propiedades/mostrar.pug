@@ -1,0 +1,39 @@
+extends ../layout/app
+
+block styles
+
+block contenido
+    //pre= JSON.stringify(propiedad, undefined, 2)
+    div(class="py-5")
+        h1(class="font-extrabold uppercase text-4xl my-10 text-center")=propiedad.titulo
+        div()
+            a(href="#", class="uppercase text-gray-600 font-bold text-center text-2xl") Categoria:
+                span(class="font-normal text-black")= propiedad.categoria.nombre
+        div(class="mt-5 md:flex md:gap-4")
+            div(class="md:w-2/3 bg-white shadow rounded-md")
+                img(class="", src=`/uploads/${propiedad.imagen}`,alt=`imagen de la propiedad ${propiedad.titulo}`)
+                div(class="px-4 py-6")
+                    p(class="")=propiedad.descripcion
+                    h2(class="text-2xl leading-6 font-bold text-gray-900 mt-3 mb-3") Informacion Destacada
+
+                    div(class="grid grid-cols-1 md:grid-cols-2")
+                        p(class="text-gray-600 font-bold text-xl mt-3 mb-3") WC's:
+                            span(class="font-normal text-black block")=propiedad.wc
+
+                        p(class="text-gray-600 font-bold text-xl mt-3 mb-3") Habitaciones:
+                            span(class="font-normal text-black block")=propiedad.habitaciones
+
+                        p(class="text-gray-600 font-bold text-xl mt-3 mb-3") Estacionamientos:
+                            span(class="font-normal text-black block")=propiedad.estacionamiento
+
+                        p(class="text-gray-600 font-bold text-xl mt-3 mb-3") Precio:
+                            span(class="font-normal text-black block")=propiedad.precio.nombre
+
+            div(class="md:w-1/3")
+                h3(class="text-center py-10 leading-6 text-2xl font-bold text-gray-900") Ubicación
+                div(class="h-96", id="mapa")
+                    p(id="lat", class="hidden")=propiedad.lat
+                    p(id="lng", class="hidden")=propiedad.lng
+                div(class="p-5")
+                    p(class="text-gray-600 font-bold text-xs") Dirección:
+                        span(class="font-normal text-black text-xl block")=propiedad.calle
