@@ -12,10 +12,12 @@ const admin = async (req, res) => {
     const {id} = token_decodificado;
 
     //Sacamos las propiedades con consulta multitabla
-    const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id}, include: [
-            {model: Categoria, attributes: ['id',  'nombre']},
-            {model: Precio, attributes: ['id',  'nombre']},
-        ]});
+    const propiedadesUsuario = await Propiedad.findAll({
+        where: {usuario_id: id}, include: [
+            {model: Categoria, attributes: ['id', 'nombre']},
+            {model: Precio, attributes: ['id', 'nombre']},
+        ]
+    });
     res.render("propiedades/admin", {
         pagina: "Mis propiedades",
         barra: true,
@@ -181,10 +183,10 @@ const guardarPropiedad = async (req, res) => {
         precio_id: precio,
         usuario_id: id
     });
-    if (propiedadGuardada !== null){
+    if (propiedadGuardada !== null) {
         const {id} = propiedadGuardada;
         res.redirect(`/propiedades/agregar-imagen/${id}`);
-    }else{
+    } else {
         res.render("propiedades/formCrearPropiedad", {
             pagina: "Crear Nueva Propiedad",
             barra: true,
@@ -198,12 +200,12 @@ const guardarPropiedad = async (req, res) => {
     }
 }
 
-const agregarImagen = async (req, res) =>{
+const agregarImagen = async (req, res) => {
     const id = req.params.id;
     //Validamos que la propiedad existe
     const propiedadExistente = await Propiedad.findByPk(id);
 
-    if (!propiedadExistente){
+    if (!propiedadExistente) {
         console.log("La propiedad no existe. Entra aqui")
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
@@ -214,7 +216,7 @@ const agregarImagen = async (req, res) =>{
 
     //Validamos que la propiedad no esta publicada
     const publicado = propiedadExistente.publicado;
-    if (publicado === true){
+    if (publicado === true) {
         console.log("La propiedad ya esta publicada")
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
@@ -229,7 +231,7 @@ const agregarImagen = async (req, res) =>{
     const token_decodificado = jwt.decode(token_sesion);
     const id_sesion = token_decodificado.id;
 
-    if (usuario_id !== id_sesion){
+    if (usuario_id !== id_sesion) {
         console.log("El usuario en sesion no es dueño de la propiedad")
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
@@ -245,13 +247,13 @@ const agregarImagen = async (req, res) =>{
     });
 }
 
-const agregarImagenDB = async (req, res) =>{
+const agregarImagenDB = async (req, res) => {
     const id_propiedad = req.body.id_propiedad;
 
 
     //Verificamos que la propiedad exista
     const propiedadExistente = await Propiedad.findOne({where: {id: id_propiedad}});
-    if (!propiedadExistente){
+    if (!propiedadExistente) {
         console.log("La propiedad no existe en la db");
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
@@ -262,7 +264,7 @@ const agregarImagenDB = async (req, res) =>{
 
     //Verificamos que el estado de la propiedad no sea publicado
     const publicado = propiedadExistente.publicado;
-    if (publicado !== false){
+    if (publicado !== false) {
         console.log("La propiedad ya esta publicada");
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
@@ -273,7 +275,7 @@ const agregarImagenDB = async (req, res) =>{
     //Verificamos que el usuario en sesion sea el dueño de la propiedad
     const id_sesion = req.cookies.token;
     const token_decodificado = jwt.decode(id_sesion);
-    if (propiedadExistente.usuario_id !== token_decodificado.id){
+    if (propiedadExistente.usuario_id !== token_decodificado.id) {
         console.log("El usuario en sesion no es dueño de la propiedad");
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
@@ -281,7 +283,7 @@ const agregarImagenDB = async (req, res) =>{
         });
         return;
     }
-    try{
+    try {
         //Guardamos la img de la propiedad y cambiamos el estado de publicado
         propiedadExistente.imagen = req.file.filename;
         propiedadExistente.publicado = true;
@@ -289,17 +291,19 @@ const agregarImagenDB = async (req, res) =>{
         // setTimeout(() =>{
         //     res.redirect("/mis-propiedades");
         // }, 3000);
-    }catch (e){
+    } catch (e) {
         console.log("Error: " + e)
     }
 }
 
-const editarPropiedadFormulario = async (req, res) =>{
+const editarPropiedadFormulario = async (req, res) => {
     const idParametro = req.params.id;
-    const propiedadEncontrada = await Propiedad.findOne({where: {id: idParametro}, include: [
+    const propiedadEncontrada = await Propiedad.findOne({
+        where: {id: idParametro}, include: [
             {model: Categoria, attributes: ['id', 'nombre']},
             {model: Precio, attributes: ['id', 'nombre']}
-        ]});
+        ]
+    });
     const categorias = await Categoria.findAll();
     const precios = await Precio.findAll();
     const tokenInSession = req.cookies.token;
@@ -307,27 +311,31 @@ const editarPropiedadFormulario = async (req, res) =>{
     const id_usuario_session = tokenDecode.id;
 
     //Verificamos que la propiedad exista
-    if(!propiedadEncontrada){
+    if (!propiedadEncontrada) {
         console.log("La propiedad con ese ID no existe en la base de datos");
-        const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_usuario_session}, include: [
+        const propiedadesUsuario = await Propiedad.findAll({
+            where: {usuario_id: id_usuario_session}, include: [
                 {model: Categoria, attributes: ['id', 'nombre']},
                 {model: Precio, attributes: ['id', 'nombre']}
-            ]});
+            ]
+        });
         res.render("propiedades/admin", {
-           pagina: 'Mis propiedades',
-           barra: true,
+            pagina: 'Mis propiedades',
+            barra: true,
             propiedades: propiedadesUsuario
         });
         return;
     }
 
     //Verificamos el usuario en sesion sea el dueño de esa propiedad
-    if(propiedadEncontrada.usuario_id !== id_usuario_session){
+    if (propiedadEncontrada.usuario_id !== id_usuario_session) {
         console.log("El usuario en sesion no es dueño de esa propiedad");
-        const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_usuario_session}, include: [
+        const propiedadesUsuario = await Propiedad.findAll({
+            where: {usuario_id: id_usuario_session}, include: [
                 {model: Categoria, attributes: ['id', 'nombre']},
                 {model: Precio, attributes: ['id', 'nombre']}
-            ]});
+            ]
+        });
         res.render("propiedades/admin", {
             pagina: 'Mis propiedades',
             barra: true,
@@ -346,8 +354,9 @@ const editarPropiedadFormulario = async (req, res) =>{
     });
 }
 
-const actualizarPropiedad = async (req, res) =>{
-    const {propiedad_id,
+const actualizarPropiedad = async (req, res) => {
+    const {
+        propiedad_id,
         titulo,
         descripcion,
         categoria,
@@ -371,10 +380,12 @@ const actualizarPropiedad = async (req, res) =>{
     const tokenInSession = req.cookies.token;
     const tokenDecode = jwt.decode(tokenInSession);
     const id_usuario_session = tokenDecode.id;
-    const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_usuario_session}, include: [
+    const propiedadesUsuario = await Propiedad.findAll({
+        where: {usuario_id: id_usuario_session}, include: [
             {model: Categoria, attributes: ['id', 'nombre']},
             {model: Precio, attributes: ['id', 'nombre']}
-        ]});
+        ]
+    });
     res.render("propiedades/admin", {
         pagina: 'Mis propiedades',
         barra: true,
@@ -382,17 +393,19 @@ const actualizarPropiedad = async (req, res) =>{
     });
 }
 
-const eliminarPropiedad = async (req, res) =>{
+const eliminarPropiedad = async (req, res) => {
     const id_propiedad = req.params.id;
     const id_sesion = await usuarioSesion(req.cookies.token);
 
     //Buscamos propiedad con ese id
     const propiedadExistente = await Propiedad.findOne({where: {id: id_propiedad}});
-    if (!propiedadExistente){
-        const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_sesion}, include: [
+    if (!propiedadExistente) {
+        const propiedadesUsuario = await Propiedad.findAll({
+            where: {usuario_id: id_sesion}, include: [
                 {model: Categoria, attributes: ['id', 'nombre']},
                 {model: Precio, attributes: ['id', 'nombre']}
-            ]});
+            ]
+        });
         res.render("propiedades/admin", {
             pagina: 'Mis propiedades',
             barra: true,
@@ -401,11 +414,13 @@ const eliminarPropiedad = async (req, res) =>{
         return;
     }
     //Verificamos que el usuario_id de la propiedad sea el usuario en sesion
-    if (propiedadExistente.usuario_id !== id_sesion){
-        const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_sesion}, include: [
+    if (propiedadExistente.usuario_id !== id_sesion) {
+        const propiedadesUsuario = await Propiedad.findAll({
+            where: {usuario_id: id_sesion}, include: [
                 {model: Categoria, attributes: ['id', 'nombre']},
                 {model: Precio, attributes: ['id', 'nombre']}
-            ]});
+            ]
+        });
         res.render("propiedades/admin", {
             pagina: 'Mis propiedades',
             barra: true,
@@ -416,16 +431,38 @@ const eliminarPropiedad = async (req, res) =>{
     //Eliminamos de la DB y la imagen
     await propiedadExistente.destroy();
     await unlink(`public/uploads/${propiedadExistente.imagen}`);
-    console.log("Se elimino la imagen en los archivos y la db")
 
-    const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_sesion}, include: [
+    const propiedadesUsuario = await Propiedad.findAll({
+        where: {usuario_id: id_sesion}, include: [
             {model: Categoria, attributes: ['id', 'nombre']},
             {model: Precio, attributes: ['id', 'nombre']}
-        ]});
+        ]
+    });
     res.render("propiedades/admin", {
         pagina: 'Mis propiedades',
         barra: true,
         propiedades: propiedadesUsuario
+    });
+}
+
+//Mustra una propiedad para todo el publico
+const mostrarPropiedad = async (req, res) => {
+    const idPropiedad = req.params.id;
+    const propiedadDB = await Propiedad.findOne({
+        where: {id: idPropiedad}, include: [
+            {model: Categoria, attributes: ['id', 'nombre']},
+            {model: Precio, attributes: ['id', 'nombre']}
+        ]
+    });
+    if (!propiedadDB) {
+        res.redirect('/404');
+        return;
+    }
+    //Mostramos la informacion de la propiedad
+    res.render('propiedades/mostrar', {
+        barra: true,
+        propiedad: propiedadDB,
+        pagina: propiedadDB.titulo
     });
 }
 
@@ -437,5 +474,6 @@ export {
     agregarImagenDB,
     editarPropiedadFormulario,
     eliminarPropiedad,
-    actualizarPropiedad
+    actualizarPropiedad,
+    mostrarPropiedad
 }
