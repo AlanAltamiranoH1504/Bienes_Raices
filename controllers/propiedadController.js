@@ -1,4 +1,5 @@
 import categoriaModelo from "../models/Categoria.js";
+import {unlink} from "node:fs/promises"
 import precioModelo from "../models/Precio.js";
 import usuarioSesion from "../helpers/UsuarioSesion.js";
 import jwt from "jsonwebtoken";
@@ -381,8 +382,51 @@ const actualizarPropiedad = async (req, res) =>{
     });
 }
 
-const eliminarPropiedad = (req, res) =>{
-    res.send("Eliminando propiedad con id: " + req.params.id);
+const eliminarPropiedad = async (req, res) =>{
+    const id_propiedad = req.params.id;
+    const id_sesion = await usuarioSesion(req.cookies.token);
+
+    //Buscamos propiedad con ese id
+    const propiedadExistente = await Propiedad.findOne({where: {id: id_propiedad}});
+    if (!propiedadExistente){
+        const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_sesion}, include: [
+                {model: Categoria, attributes: ['id', 'nombre']},
+                {model: Precio, attributes: ['id', 'nombre']}
+            ]});
+        res.render("propiedades/admin", {
+            pagina: 'Mis propiedades',
+            barra: true,
+            propiedades: propiedadesUsuario
+        });
+        return;
+    }
+    //Verificamos que el usuario_id de la propiedad sea el usuario en sesion
+    if (propiedadExistente.usuario_id !== id_sesion){
+        const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_sesion}, include: [
+                {model: Categoria, attributes: ['id', 'nombre']},
+                {model: Precio, attributes: ['id', 'nombre']}
+            ]});
+        res.render("propiedades/admin", {
+            pagina: 'Mis propiedades',
+            barra: true,
+            propiedades: propiedadesUsuario
+        });
+        return;
+    }
+    //Eliminamos de la DB y la imagen
+    await propiedadExistente.destroy();
+    await unlink(`public/uploads/${propiedadExistente.imagen}`);
+    console.log("Se elimino la imagen en los archivos y la db")
+
+    const propiedadesUsuario = await Propiedad.findAll({where: {usuario_id: id_sesion}, include: [
+            {model: Categoria, attributes: ['id', 'nombre']},
+            {model: Precio, attributes: ['id', 'nombre']}
+        ]});
+    res.render("propiedades/admin", {
+        pagina: 'Mis propiedades',
+        barra: true,
+        propiedades: propiedadesUsuario
+    });
 }
 
 export {
