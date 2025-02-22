@@ -1,6 +1,7 @@
 extends ../layout/app
 
 block styles
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
 
 block contenido
     //pre= JSON.stringify(propiedad, undefined, 2)
@@ -35,5 +36,8 @@ block contenido
                     p(id="lat", class="hidden")=propiedad.lat
                     p(id="lng", class="hidden")=propiedad.lng
                 div(class="p-5")
-                    p(class="text-gray-600 font-bold text-xs") Dirección:
-                        span(class="font-normal text-black text-xl block")=propiedad.calle
+                    p(class="text-gray-600 font-bold") Dirección:
+                        span(id="calle", class="font-normal text-black text-xl block")=propiedad.calle
+block scripts
+    script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
+    script(src="/js/mostrarMapa.js")
