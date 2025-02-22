@@ -11,18 +11,36 @@ const admin = async (req, res) => {
     const token_decodificado = jwt.decode(cookie_token);
     const {id} = token_decodificado;
 
-    //Sacamos las propiedades con consulta multitabla
-    const propiedadesUsuario = await Propiedad.findAll({
-        where: {usuario_id: id}, include: [
-            {model: Categoria, attributes: ['id', 'nombre']},
-            {model: Precio, attributes: ['id', 'nombre']},
-        ]
-    });
-    res.render("propiedades/admin", {
-        pagina: "Mis propiedades",
-        barra: true,
-        propiedades: propiedadesUsuario
-    });
+    //Leemos el queryString
+    const {pagina: paginaActual} = req.query;
+    const expresion = /^[0-9]$/
+    if(!expresion.test(paginaActual)){
+        console.log("No pasa la validacion");
+        return res.redirect('/mis-propiedades?pagina=1')
+    }
+
+    //Realizamos la consulta con paginacion
+    try{
+        const limit = 4;
+        const offset = (paginaActual * limit) - limit;
+
+        //Sacamos las propiedades con consulta multitabla y una paginacion limitada a 4 elementos
+        const propiedadesUsuario = await Propiedad.findAll({
+            limit: limit,
+            offset: offset,
+            where: {usuario_id: id}, include: [
+                {model: Categoria, attributes: ['id', 'nombre']},
+                {model: Precio, attributes: ['id', 'nombre']},
+            ]
+        });
+        res.render("propiedades/admin", {
+            pagina: "Mis propiedades",
+            barra: true,
+            propiedades: propiedadesUsuario
+        });
+    }catch (e){
+        console.log("ERROR: " + e.message);
+    }
 }
 
 const formCrearPropiedad = async (req, res) => {
