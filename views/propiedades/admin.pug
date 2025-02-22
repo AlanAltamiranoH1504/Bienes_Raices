@@ -30,7 +30,7 @@ block contenido
                                         //p(class=`px-2 py-2 md:py-1 uppercase leading-5 font-semibold rounded-sm`)
                                         form(action="#")
                                             input(type="submit" class="px-2 py-2 md:py-1 uppercase leading-5 font-semibold rounded-sm ${propiedad.publicado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}", value=`${propiedad.publicado ? 'Publicado': 'No Publicado'}`)
-                                        a(href=`/propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center block py-1 bg-indigo-300 text-indigo-600 rounded hover:bg-indigo-400 my-2") Editar
+                                        a(href=`/editar-propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center block py-1 bg-indigo-300 text-indigo-600 rounded hover:bg-indigo-400 my-2") Editar
                                         a(href=`/eliminar-propiedad/${propiedad.id}`, class="uppercase text-black font-bold text-center py-1 block bg-red-300 text-red-600 rounded hover:bg-red-400") Eliminar
         else
             div(class="container my-4")
