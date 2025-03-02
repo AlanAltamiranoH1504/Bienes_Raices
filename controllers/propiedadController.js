@@ -21,7 +21,7 @@ const admin = async (req, res) => {
 
     //Realizamos la consulta con paginacion
     try{
-        const limit = 4;
+        const limit = 3;
         const offset = (paginaActual * limit) - limit;
 
         //Sacamos las propiedades con consulta multitabla y una paginacion limitada a 4 elementos
@@ -33,10 +33,18 @@ const admin = async (req, res) => {
                 {model: Precio, attributes: ['id', 'nombre']},
             ]
         });
+        const cantidadPropiedades = await Propiedad.count({where: {usuario_id:id}});
+        const cantidadPaginas = Math.ceil(cantidadPropiedades / limit);
+        console.log(cantidadPaginas)
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
             barra: true,
-            propiedades: propiedadesUsuario
+            propiedades: propiedadesUsuario,
+            cantidadPaginas: cantidadPaginas,
+            paginaActual: paginaActual,
+            cantidadPropiedades: cantidadPropiedades,
+            offset: offset,
+            limit: limit,
         });
     }catch (e){
         console.log("ERROR: " + e.message);
