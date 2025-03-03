@@ -39,7 +39,6 @@ block contenido
                              while n <= cantidadPaginas
                                  a(href=`/mis-propiedades?pagina=${n}`, class=`${paginaActual == n ? 'bg-indigo-600 hover:bg-indigo-800 text-white border px-4 py-2' : 'hover:bg-gray-100' } relative inline-flex items-center px-4 py-2 border text-sm font-semibold`)= n
                                  - n++;
-
         else
             div(class="container my-4")
                 div(class="bg-green-600 hover:bg-green-700 text-white uppercase font-bold px-4 py-2 text-center max-w-md mx-auto rounded-md") Actualmente no cuentas con propiedades
