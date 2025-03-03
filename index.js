@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import propiedadesRoutes from "./routes/propiedadesRoutes.js";
 import conexion from "./config/db.js";
+import appRoutes from "./routes/appRoutes.js";
+import apiRoutes from "./routes/apiRoutes.js";
 const app = express();
 
 //Habilitar el template engine de pug y la carpeta donde estaran las vistass
@@ -26,6 +28,10 @@ app.use(express.static("public"));
 app.use("/auth", usuarioRoutes);
 //Definimos rutass para propiedades
 app.use("/", propiedadesRoutes);
+//Definimos rutas generales de la aplicacion
+app.use("/app", appRoutes);
+//Definimos rutas para la api
+app.use("/api", apiRoutes);
 
 
 //Probamos conexion a la db

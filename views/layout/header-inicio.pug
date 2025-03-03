@@ -1,0 +1,16 @@
+header(class="bg-indigo-600 hover:bg-indigo-700 py-4")
+    div(class="container mx-auto flex justify-between items-center")
+        h1(class="text-2xl text-white font-extrabold text-center uppercase") Bienes
+            span(class="font-normal")  Raices
+
+        nav(class="my-5 text-sm md:flex md:items-center md:gap-5 hidden text-white font-bold")
+            a(href="/auth/registro", class="border py-2 px-4 rounded uppercase bg-orange-500 hover:bg-orange-700") Crear Cuenta
+            a(href="/auth/login", class="border py-2 px-4 rounded uppercase bg-green-600 hover:bg-green-700") Iniciar Sesión
+            //a(href="", class="bg-red-700 hover:bg-red-700 rounded-xl px-2 py-2 uppercase text-sm") Cerrar Sesion
+div(class="bg-indigo-700 py-5 hidden lg:block")
+    div(class="container mx-auto flex justify-between")
+        a(href="/categorias/1", class="text-sm font-bold uppercase text-white hover:bg-indigo-900") Casas
+        a(href="/categorias/2", class="text-sm font-bold uppercase text-white") Departamentos
+        a(href="/categorias/3", class="text-sm font-bold uppercase text-white") Bodegas
+        a(href="/categorias/4", class="text-sm font-bold uppercase text-white") Terrenos
+        a(href="/categorias/5", class="text-sm font-bold uppercase text-white") Cabañas
