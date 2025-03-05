@@ -14,6 +14,7 @@ const app = express();
 //Habilitar el template engine de pug y la carpeta donde estaran las vistass
 app.set("view engine", "pug");
 app.set("views", "./views");
+
 //Habilitamos la lectura de formularios
 app.use(express.urlencoded({ extended: true }));
 //Habilitamos cookie-parser

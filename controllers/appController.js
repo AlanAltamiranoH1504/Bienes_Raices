@@ -1,7 +1,17 @@
-const inicio = (req, res) => {
+//Importamos todos los modelos con relaciones
+import {Propiedad, Precio, Categoria, Usuario} from "../models/index.js";
+
+const inicio = async (req, res) => {
+
+    //Tramos los precios y las categorias
+    const precios = await Precio.findAll({raw: true});
+    const categorias = await Categoria.findAll({raw: true});
+
     res.render("inicio", {
         barra_inicio:true,
-        pagina: "Inicio"
+        pagina: "Inicio",
+        precios,
+        categorias
     });
 }
 

@@ -4,6 +4,29 @@
     const mapa = L.map('mapa-inicio').setView([lat, lng ], 13);
     let markers = new L.FeatureGroup().addTo(mapa);
 
+    let propiedadesArray = [];
+    function setArrayPropiedades(data){
+        const {propiedades} = data;
+        propiedadesArray.push(...propiedades);
+    }
+
+    //Filtros de seleccion
+    const filtros = {
+        categoria: '',
+        precio: ''
+    }
+    const categorias = document.querySelector("#categorias");
+    const precios = document.querySelector("#precios");
+
+    categorias.addEventListener("change", (e) =>{
+        filtros.categoria = +e.target.value;
+        filtrarPropiedades(filtros);
+    });
+    precios.addEventListener("change", (e) =>{
+        filtros.precio = +e.target.value;
+        filtrarPropiedades(filtros);
+    });
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapa);
@@ -13,7 +36,8 @@
             await fetch("http://localhost:3000/api/propiedades").then((response) =>{
                 return response.json();
             }).then((data) =>{
-                mostrarPropiedades(data)
+                mostrarPropiedades(data);
+                setArrayPropiedades(data);
             })
         }catch (e){
             console.log("Error: " + e)
@@ -36,8 +60,32 @@
             `)
             //Esta parte del codigo debe revisarla para que funcione el filtro de busqueda Video 149
             // makers.addLayer(maker);
-
         });
+    }
+
+    function filtrarPropiedades(filtros){
+        if (filtros.precio && (filtros.categoria === '' || filtros.categoria === 0)){
+            const filtrosPorPrecio = propiedadesArray.filter((propiedad) =>{
+                return propiedad.precio.id === filtros.precio;
+            })
+            console.log(filtrosPorPrecio)
+        }else if((filtros.precio === '' || filtros.precio === 0) && filtros.categoria){
+            const filtrosPorCategoria = propiedadesArray.filter((propiedad) =>{
+                return propiedad.categoria.id === filtros.categoria;
+            });
+            console.log(filtrosPorCategoria)
+        }else if(filtros.precio && filtros.categoria){
+            const fullFiltros = propiedadesArray.filter((propiedad) =>{
+                return propiedad.categoria.id === filtros.categoria && propiedad.precio.id === filtros.precio;
+            })
+            console.log(fullFiltros)
+        }else {
+            console.log("Sin ningun filtro")
+        }
+    }
+
+    const filtrarCategoria = (propiedad) =>{
+        console.log(propiedad)
     }
 
     obtenerPropiedades();
