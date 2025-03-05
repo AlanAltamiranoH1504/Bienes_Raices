@@ -3,7 +3,6 @@
     const lng = -99.0303262;
     const mapa = L.map('mapa-inicio').setView([lat, lng ], 13);
     let markers = new L.FeatureGroup().addTo(mapa);
-
     let propiedadesArray = [];
     function setArrayPropiedades(data){
         const {propiedades} = data;
@@ -18,14 +17,19 @@
     const categorias = document.querySelector("#categorias");
     const precios = document.querySelector("#precios");
 
+    let filtrosAplicados = [];
     categorias.addEventListener("change", (e) =>{
         filtros.categoria = +e.target.value;
-        filtrarPropiedades(filtros);
+        filtrosAplicados = filtrarPropiedades(filtros);
+        // console.log(filtrosAplicados)
+        mostrarPropiedades(filtrosAplicados);
     });
     precios.addEventListener("change", (e) =>{
         filtros.precio = +e.target.value;
-        filtrarPropiedades(filtros);
+        filtrosAplicados = filtrarPropiedades(filtros);
+        mostrarPropiedades(filtrosAplicados);
     });
+
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -36,15 +40,18 @@
             await fetch("http://localhost:3000/api/propiedades").then((response) =>{
                 return response.json();
             }).then((data) =>{
-                mostrarPropiedades(data);
+                const {propiedades} = data;
+                mostrarPropiedades(propiedades);
                 setArrayPropiedades(data);
             })
         }catch (e){
             console.log("Error: " + e)
         }
     }
-    function mostrarPropiedades(data){
-        const {propiedades} = data;
+    function mostrarPropiedades(propiedades){
+        console.log(propiedades)
+        //Limpiar los markers
+        markers.clearLayers();
         propiedades.forEach((propiedad, index) =>{
             //Agrgeamos los pines al mapa
             const maker =  new L.Marker([propiedad.lat, propiedad.lng], {
@@ -59,7 +66,7 @@
                 <a href="/propiedad/${propiedad.id}" class="font-bold text-xl text-center bg-green-600 rounded px-3 py-2 block uppercase">Detalles</a>
             `)
             //Esta parte del codigo debe revisarla para que funcione el filtro de busqueda Video 149
-            // makers.addLayer(maker);
+            markers.addLayer(maker);
         });
     }
 
@@ -67,26 +74,24 @@
         if (filtros.precio && (filtros.categoria === '' || filtros.categoria === 0)){
             const filtrosPorPrecio = propiedadesArray.filter((propiedad) =>{
                 return propiedad.precio.id === filtros.precio;
-            })
+            });
+            return filtrosPorPrecio;
             console.log(filtrosPorPrecio)
         }else if((filtros.precio === '' || filtros.precio === 0) && filtros.categoria){
             const filtrosPorCategoria = propiedadesArray.filter((propiedad) =>{
                 return propiedad.categoria.id === filtros.categoria;
             });
+            return filtrosPorCategoria;
             console.log(filtrosPorCategoria)
         }else if(filtros.precio && filtros.categoria){
             const fullFiltros = propiedadesArray.filter((propiedad) =>{
                 return propiedad.categoria.id === filtros.categoria && propiedad.precio.id === filtros.precio;
-            })
-            console.log(fullFiltros)
+            });
+            return fullFiltros;
+            // console.log(fullFiltros)
         }else {
             console.log("Sin ningun filtro")
         }
     }
-
-    const filtrarCategoria = (propiedad) =>{
-        console.log(propiedad)
-    }
-
     obtenerPropiedades();
 })();
