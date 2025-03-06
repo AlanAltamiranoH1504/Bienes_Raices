@@ -1,0 +1,34 @@
+extends layout/app
+
+block styles
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
+
+block contenido
+    div(class="py-5")
+        h1(class="text-center text-4xl font-extrabold mb-4 uppercase") #{categoria.nombre}
+        section(class="py-5")
+            //div(class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5")
+            if (propiedades.length >= 1)
+                div(class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5")
+                        each propiedad in propiedades
+                            div(class="border border-gray-400 rounded-md shadow")
+                                h2(class="text-xl font-bold uppercase text-center py-3")=propiedad.titulo
+                                div(class="mx-2 py-2")
+                                    div(class="w-full flex items-center")
+                                        img(src=`/uploads/${propiedad.imagen}`, class="h-72 w-full object-cover")
+                                    div(class="mt-3")
+                                        p(class=" text-gray-700 uppercase font-bold") Direccion:
+                                        spam(class="text-black")=propiedad.calle
+                                    div(class="mt-3")
+                                        p(class="text-gray-700 uppercase font-bold") Precio:
+                                        spam(class="text-black")=propiedad.precio.nombre
+                                    div(class="mt-3")
+                                        p(class="text-gray-700 uppercase font-bold") Categoria:
+                                        spam(class="text-black")=propiedad.categoria.nombre
+                                    div(class="mt-3")
+                                        a(href=`/propiedad/${propiedad.id}`, class="border border-indigo-600 bg-indigo-600 uppercase font-bold rounded-md text-white px-3 py-2 block text-center hover:bg-indigo-700") Detalles
+                        //pre= JSON.stringify(propiedades, undefined, 2)
+            else
+                div(class="flex items-center justify-center ")
+                    div(class="block w-full text-center font-extrabold uppercase px-4 py-3 bg-red-600 rounded text-white") No hay resultados para esta categoria
+

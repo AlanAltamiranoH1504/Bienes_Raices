@@ -2,7 +2,6 @@
 import {Propiedad, Precio, Categoria, Usuario} from "../models/index.js";
 
 const inicio = async (req, res) => {
-
     const precios = await Precio.findAll({raw: true});
     const categorias = await Categoria.findAll({raw: true});
     const propiedades = await Propiedad.findAll({
@@ -34,9 +33,21 @@ const pagina404 = (req, res) => {
     res.send("Pagina 404");
 }
 
-const categorias = (req, res) => {
-    res.send("Pagina de categorias");
-
+const categorias = async (req, res) => {
+    const id = req.params.id;
+    const propiedades = await Propiedad.findAll({
+        where: {categoria_id: id},
+        include: [
+            {model: Categoria, attributes: ['id', 'nombre']},
+            {model: Precio, attributes: ['id', 'nombre']}
+        ]
+    });
+    const categoria = await Categoria.findByPk(id);
+    res.render('categorias', {
+        propiedades,
+        barra_inicio: true,
+        categoria
+    });
 }
 
 const buscador = (req, res) => {
