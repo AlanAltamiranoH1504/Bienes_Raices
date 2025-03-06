@@ -5,7 +5,7 @@ block styles
 
 block contenido
     div(class="py-5")
-        h1(class="text-center text-4xl font-extrabold mb-4") Ubicación en el Mapa
+        h1(class="text-center text-4xl font-extrabold mb-4 uppercase") Ubicación en el Mapa
 
         //Select de filtrado
         h2(class="text-sm uppercase font-bold text-gray-800") Filtrar Propiedades:
@@ -35,8 +35,8 @@ block contenido
         //Mapa de propiedades
         div(id="mapa-inicio", class="h-[600px]")
 
-        section(class="py-10")
-            h2(class="text-4xl font-extrabold uppercase text-center py-10") Casas en Venta
+        section(class="py-5")
+            h2(class="text-4xl font-extrabold uppercase text-center py-5") Casas en Venta
             div(class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5")
                 each propiedad in propiedades
                     div(class="border border-gray-400 rounded-md shadow")
@@ -56,6 +56,27 @@ block contenido
                             div(class="mt-3")
                                 a(href=`/propiedad/${propiedad.id}`, class="border border-indigo-600 bg-indigo-600 uppercase font-bold rounded-md text-white px-3 py-2 block text-center hover:bg-indigo-700") Detalles
             //pre= JSON.stringify(propiedades, undefined, 2)
+        section(class="py-5")
+            h2(class="text-4xl font-extrabold uppercase text-center py-5") Departamentos en Venta
+            div(class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5")
+                each departamento in departamentos
+                    div(class="border border-gray-400 rounded-md shadow")
+                        h2(class="text-xl font-bold uppercase text-center py-3")=departamento.titulo
+                        div(class="mx-2 py-2")
+                            div(class="w-full flex items-center")
+                                img(src=`/uploads/${departamento.imagen}`, class="h-72 w-full object-cover")
+                            div(class="mt-3")
+                                p(class=" text-gray-700 uppercase font-bold") Direccion:
+                                spam(class="text-black")=departamento.calle
+                            div(class="mt-3")
+                                p(class="text-gray-700 uppercase font-bold") Precio:
+                                spam(class="text-black")=departamento.precio.nombre
+                            div(class="mt-3")
+                                p(class="text-gray-700 uppercase font-bold") Categoria:
+                                spam(class="text-black")=departamento.categoria.nombre
+                            div(class="mt-3")
+                                a(href=`/propiedad/${departamento.id}`, class="border border-indigo-600 bg-indigo-600 uppercase font-bold rounded-md text-white px-3 py-2 block text-center hover:bg-indigo-700") Detalles
+
 block scripts
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
     script(src="/js/mapaInicio.js")

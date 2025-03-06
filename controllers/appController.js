@@ -12,12 +12,21 @@ const inicio = async (req, res) => {
         ]
     });
 
+    const departamentos = await Propiedad.findAll({
+        limit: 4,
+        where: {categoria_id: 2}, include: [
+            {model: Categoria, attributes: ['id', 'nombre']},
+            {model: Precio, attributes: ['id', 'nombre']},
+        ]
+    });
+    console.log(departamentos)
     res.render("inicio", {
         barra_inicio: true,
         pagina: "Inicio",
         precios,
         categorias,
-        propiedades
+        propiedades,
+        departamentos
     });
 }
 
