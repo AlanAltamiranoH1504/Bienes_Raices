@@ -1,5 +1,6 @@
 //Importamos todos los modelos con relaciones
 import {Propiedad, Precio, Categoria, Usuario} from "../models/index.js";
+import {where} from "sequelize";
 
 const inicio = async (req, res) => {
     const precios = await Precio.findAll({raw: true});
@@ -35,6 +36,13 @@ const pagina404 = (req, res) => {
 
 const categorias = async (req, res) => {
     const id = req.params.id;
+
+    const categoriaDB = await Categoria.findByPk(id);
+    if (!categoriaDB){
+        res.redirect("/app/error-no-encontrado");
+        return;
+    }
+
     const propiedades = await Propiedad.findAll({
         where: {categoria_id: id},
         include: [
@@ -46,7 +54,8 @@ const categorias = async (req, res) => {
     res.render('categorias', {
         propiedades,
         barra_inicio: true,
-        categoria
+        categoria,
+        pagina: categoria.nombre
     });
 }
 
