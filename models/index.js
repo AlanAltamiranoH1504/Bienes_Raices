@@ -3,7 +3,7 @@ import Propiedad from "./Propiedad.js";
 import Categoria from "./Categoria.js";
 import Precio from "./Precio.js";
 import Usuario from "./Usuario.js";
-
+import Mensaje from "./Mensaje.js";
 
 //Relaciones entre usuario y Propiedad
 Usuario.hasMany(Propiedad); //Un suario tiene muchas propiedades
@@ -30,9 +30,25 @@ Propiedad.belongsTo(Precio, {
 }); //Una propiedad pertence a un solo precio
 
 
+//Relacion entre Mensaje y Usuario
+Mensaje.belongsTo(Usuario, {
+    foreignKey: "usuario_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE"
+}); //Un mensaje pertence a un unico usuario
+
+//Relacion entre Mensaje y Propiedad
+Mensaje.belongsTo(Propiedad, {
+    foreignKey: 'propiedad_id',
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
+}); //Un mensaje pertence a una sola propiedad
+
+
 export {
     Propiedad,
     Precio,
     Categoria,
-    Usuario
+    Usuario,
+    Mensaje
 }

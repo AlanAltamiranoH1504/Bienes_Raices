@@ -6,6 +6,7 @@ import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import propiedadesRoutes from "./routes/propiedadesRoutes.js";
+import mensajeRoutes from "./routes/mensajeRoutes.js";
 import conexion from "./config/db.js";
 import appRoutes from "./routes/appRoutes.js";
 import apiRoutes from "./routes/apiRoutes.js";
@@ -33,6 +34,8 @@ app.use("/", propiedadesRoutes);
 app.use("/app", appRoutes);
 //Definimos rutas para la api
 app.use("/api", apiRoutes);
+//Definimos rutas para la recepcion de mensajes
+app.use("/msg", mensajeRoutes)
 
 
 //Probamos conexion a la db
