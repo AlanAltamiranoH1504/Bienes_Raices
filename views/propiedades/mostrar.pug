@@ -46,14 +46,18 @@ block contenido
                         if mostrarForm
                             h3(class="text-center py-5 leading-6 text-2xl font-bold text-gray-900") Comunícate para más información
                             div(class="bg-white px-4 py-1 shadow rounded-md")
-                                form(class="", method="POST",  action="")
+                                form(class="", method="POST",  action="/msg/send")
                                     input(name="_csrf", id="_csrf", type="hidden", value=csrf)
                                     input(name="usuario_envia", id="usuario_enviar", value=usuario.id, type="hidden")
+                                    input(name="propiedad_id", id="propiedad_id", value=propiedad.id, type="hidden")
                                     div(class="mb-3")
                                         label(class="block text-sm text-left uppercase text-gray-500 mb-2 font-bold", for="asunto") Asunto:
-                                        textarea(class="w-full border border-gray-400 py-1 px-3 rounded-md text-sm", name="mensaje", id="mensaje", placeholder="Ingresa el mensaje", rows="5", cols="20")                                        div(class="mb-4")
+                                        textarea(class="w-full border border-gray-400 py-1 px-3 rounded-md text-sm", name="mensaje", id="mensaje", placeholder="Ingresa el mensaje", rows="5", cols="20")
 
                                     input(type="submit", value="Enviar", class="bg-green-600 hover:bg-green-700 text-center text-white uppercase block px-3 py-1 text-sm rounded w-full font-bold")
+
+                                    //if envioCorrecto
+                                    //    div(class="bg-indigo-600 hover:bg-indigo-700 text-white uppercase font-bold text-center") ¡MENSAJE ENVIADO!
                         else
                             p no Se muestra el form porque es dueño de la propiedad
 
