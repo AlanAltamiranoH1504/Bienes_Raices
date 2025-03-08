@@ -1,6 +1,7 @@
 //Importamos todos los modelos con relaciones
 import {Propiedad, Precio, Categoria, Usuario} from "../models/index.js";
-import {where} from "sequelize";
+import csurf from "csurf";
+import {Op} from "sequelize";
 
 const inicio = async (req, res) => {
     const precios = await Precio.findAll({raw: true});
@@ -19,26 +20,30 @@ const inicio = async (req, res) => {
             {model: Precio, attributes: ['id', 'nombre']},
         ]
     });
-    console.log(departamentos)
     res.render("inicio", {
         barra_inicio: true,
         pagina: "Inicio",
         precios,
         categorias,
         propiedades,
-        departamentos
+        departamentos,
+        csrf: req.csrfToken()
     });
 }
 
 const pagina404 = (req, res) => {
-    res.send("Pagina 404");
+    res.render("pagina404", {
+        barra_inicio: true,
+        pagina: "404",
+        csrf: req.csrfToken()
+    });
 }
 
 const categorias = async (req, res) => {
     const id = req.params.id;
 
     const categoriaDB = await Categoria.findByPk(id);
-    if (!categoriaDB){
+    if (!categoriaDB) {
         res.redirect("/app/error-no-encontrado");
         return;
     }
@@ -55,12 +60,48 @@ const categorias = async (req, res) => {
         propiedades,
         barra_inicio: true,
         categoria,
-        pagina: categoria.nombre
+        pagina: categoria.nombre,
+        csrf: req.csrfToken()
     });
 }
 
-const buscador = (req, res) => {
-    res.send("Pagina de buscador");
+const buscador = async (req, res) => {
+    const requestBody = req.body.busqueda;
+    const textoBusqueda = requestBody
+
+    //Validacion de texto a buscar no vacio
+    if (textoBusqueda === null || textoBusqueda.trim() === ""){
+        console.log("El campo no fue llenado de manera correcta");
+        return res.redirect("back");
+    }
+
+    const propiedades = await Propiedad.findAll({
+        where: {
+            titulo: {
+                [Op.like] : `%${textoBusqueda}%`
+            }
+        },
+        include: [
+            {model: Categoria, attributes: ['id', 'nombre']},
+            {model: Precio, attributes: ['id', 'nombre']}
+        ]
+    });
+
+    //Validamos cantidad de propidades para mensaje de advertencia
+    if (propiedades.length < 1){
+        res.render("busqueda", {
+            barra_inicio: true,
+            propiedades: propiedades,
+            csrf: req.csrfToken(),
+            msg: true
+        });
+        return ;
+    }
+    res.render("busqueda", {
+        barra_inicio: true,
+        propiedades: propiedades,
+        csrf: req.csrfToken()
+    })
 }
 
 export {

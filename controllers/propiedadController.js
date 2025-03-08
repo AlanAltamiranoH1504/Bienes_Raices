@@ -481,7 +481,7 @@ const mostrarPropiedad = async (req, res) => {
         ]
     });
     if (!propiedadDB) {
-        res.redirect('/404');
+        res.redirect('/app/error-no-encontrado');
         return;
     }
     //Mostramos la informacion de la propiedad
