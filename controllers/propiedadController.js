@@ -4,6 +4,8 @@ import precioModelo from "../models/Precio.js";
 import usuarioSesion from "../helpers/UsuarioSesion.js";
 import jwt from "jsonwebtoken";
 import {Categoria, Precio, Propiedad} from "../models/index.js";
+import Usuario from "../models/Usuario.js";
+import esVendedor from "../helpers/EsVendedor.js";
 
 const admin = async (req, res) => {
     //Sacamos las propiedades del usuario en sesion
@@ -473,6 +475,11 @@ const eliminarPropiedad = async (req, res) => {
 
 //Mustra una propiedad para todo el publico
 const mostrarPropiedad = async (req, res) => {
+    const cookie = req.cookies.token;
+    let iniciarSesion;
+    let usuario;
+    let mostrarForm;
+
     const idPropiedad = req.params.id;
     const propiedadDB = await Propiedad.findOne({
         where: {id: idPropiedad}, include: [
@@ -484,11 +491,32 @@ const mostrarPropiedad = async (req, res) => {
         res.redirect('/app/error-no-encontrado');
         return;
     }
+
+    if(!cookie){
+        console.log("No existe la cookie con el token. Debe iniciar sesion");
+        iniciarSesion = true;
+    }else{
+        console.log("Existe la cookie en el token")
+        const token = jwt.verify(cookie, process.env.JWT_SECRET);
+        if (!token.id){
+            iniciarSesion = true;
+        }else {
+            const id = token.id;
+            usuario = await Usuario.findByPk(id);
+            iniciarSesion = false;
+            //Verificamos si el usuario es dueño de la propiedad
+            mostrarForm = esVendedor(usuario, propiedadDB);
+        }
+    }
     //Mostramos la informacion de la propiedad
     res.render('propiedades/mostrar', {
         barra: true,
         propiedad: propiedadDB,
-        pagina: propiedadDB.titulo
+        pagina: propiedadDB.titulo,
+        iniciarSesion,
+        mostrarForm,
+        usuario,
+        csrf: req.csrfToken()
     });
 }
 

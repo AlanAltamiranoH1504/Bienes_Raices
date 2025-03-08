@@ -93,13 +93,15 @@ const buscador = async (req, res) => {
             barra_inicio: true,
             propiedades: propiedades,
             csrf: req.csrfToken(),
-            msg: true
+            msg: true,
+            pagina: "Resultados"
         });
         return ;
     }
     res.render("busqueda", {
         barra_inicio: true,
         propiedades: propiedades,
+        pagina: "Resultados",
         csrf: req.csrfToken()
     })
 }

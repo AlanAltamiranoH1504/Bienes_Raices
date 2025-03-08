@@ -5,7 +5,7 @@ block contenido
         div(class="bg-red-600 py-2 px-3 text-white font-extrabold uppercase text-center rounded-md") No hay resultados para esa busqueda
     else
         //pre= JSON.stringify(propiedades, undefined, 2)
-        div(class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5")
+        div(class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5 mb-5")
             each propiedad in propiedades
                 div(class="border border-gray-400 rounded-md shadow")
                     h2(class="text-xl font-bold uppercase text-center py-3")=propiedad.titulo

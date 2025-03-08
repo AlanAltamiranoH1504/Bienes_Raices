@@ -599,6 +599,9 @@ video {
 .mt-8 {
   margin-top: 2rem;
 }
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
 .block {
   display: block;
 }
@@ -838,6 +841,12 @@ video {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+.pt-1 {
+  padding-top: 0.25rem;
+}
+.text-left {
+  text-align: left;
 }
 .text-center {
   text-align: center;

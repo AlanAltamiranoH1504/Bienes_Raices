@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import protegerRuta from "../middlewares/ProtegerRuta.js";
+import identificarUsuario from "../middlewares/identificarUsuario.js";
 import upload from "../middlewares/subirArchivo.js";
 import {
     admin,

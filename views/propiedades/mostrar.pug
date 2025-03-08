@@ -31,13 +31,34 @@ block contenido
                             span(class="font-normal text-black block")=propiedad.precio.nombre
 
             div(class="md:w-1/3")
-                h3(class="text-center py-10 leading-6 text-2xl font-bold text-gray-900") Ubicación
+                h3(class="text-center pt-1 mb-2  leading-6 text-2xl font-bold text-gray-900") Ubicación
                 div(class="h-96", id="mapa")
                     p(id="lat", class="hidden")=propiedad.lat
                     p(id="lng", class="hidden")=propiedad.lng
                 div(class="p-5")
                     p(class="text-gray-600 font-bold") Dirección:
                         span(id="calle", class="font-normal text-black text-xl block")=propiedad.calle
+                div
+                    if iniciarSesion
+                        div(class="flex justify-center items-center")
+                            a(href="/auth/login", class="bg-green-600 hover:bg-green-700 text-white uppercase font-bold text-white px-3 py-2 rounded-md") Iniciar Sesion Contactarte
+                    else
+                        if mostrarForm
+                            h3(class="text-center py-5 leading-6 text-2xl font-bold text-gray-900") Comunícate para más información
+                            div(class="bg-white px-4 py-1 shadow rounded-md")
+                                form(class="", method="POST",  action="")
+                                    input(name="_csrf", id="_csrf", type="hidden", value=csrf)
+                                    input(name="usuario_envia", id="usuario_enviar", value=usuario.id, type="hidden")
+                                    div(class="mb-3")
+                                        label(class="block text-sm text-left uppercase text-gray-500 mb-2 font-bold", for="asunto") Asunto:
+                                        textarea(class="w-full border border-gray-400 py-1 px-3 rounded-md text-sm", name="mensaje", id="mensaje", placeholder="Ingresa el mensaje", rows="5", cols="20")                                        div(class="mb-4")
+
+                                    input(type="submit", value="Enviar", class="bg-green-600 hover:bg-green-700 text-center text-white uppercase block px-3 py-1 text-sm rounded w-full font-bold")
+                        else
+                            p no Se muestra el form porque es dueño de la propiedad
+
+
+
 block scripts
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
     script(src="/js/mostrarMapa.js")
