@@ -28,7 +28,7 @@ block contenido
                                 p(class="font-bold uppercase") Email de Contacto:
                                 span(class="font-normal mb-2")=mensaje.usuario.email
                                 p(class="font-bold uppercase") Fecha de Envio de Mensaje:
-                                span(class="font-normal mb-2")=mensaje.createdAt
+                                span(class="font-normal mb-2")= Fechas(mensaje.createdAt)
                             div(class="sm:w-1/4 md:w-2/6 lg:w-1/6")
                                 p(class="font-bold uppercase") Mensaje Escrito:
                                 span(class="font-normal")=mensaje.mensaje

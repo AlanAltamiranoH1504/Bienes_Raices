@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import {Categoria, Mensaje, Precio, Propiedad} from "../models/index.js";
 import Usuario from "../models/Usuario.js";
 import esVendedor from "../helpers/EsVendedor.js";
+import Fechas from "../helpers/Fechas.js";
 
 const admin = async (req, res) => {
     //Sacamos las propiedades del usuario en sesion
@@ -534,7 +535,9 @@ const verMensajes = async (req, res) => {
     res.render("propiedades/mensajes", {
         barra: true,
         mensajes: mensajesDeLaPropiedad,
-        pagina: "Mensajes"
+        pagina: "Mensajes",
+        Fechas
+
     })
 }
 
