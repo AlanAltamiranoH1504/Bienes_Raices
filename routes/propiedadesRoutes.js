@@ -13,7 +13,8 @@ import {
     actualizarPropiedad,
     eliminarPropiedad,
     mostrarPropiedad,
-    verMensajes
+    verMensajes,
+    volver
 } from "../controllers/propiedadController.js";
 
 //Rutas protegidad para usuario en sesion
@@ -26,6 +27,7 @@ router.get("/editar-propiedad/:id", protegerRuta, editarPropiedadFormulario);
 router.post("/actualizar-propiedad", protegerRuta, actualizarPropiedad);
 router.get("/eliminar-propiedad/:id", protegerRuta, eliminarPropiedad);
 router.get("/mensajes/:id", protegerRuta, verMensajes);
+router.get("/volver", protegerRuta, volver)
 
 //Rutas de area publica
 router.get('/propiedad/:id', mostrarPropiedad);

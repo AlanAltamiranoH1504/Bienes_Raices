@@ -3,6 +3,7 @@ import Propiedad from "../models/Propiedad.js";
 import jwt from "jsonwebtoken";
 import Usuario from "../models/Usuario.js";
 import esVendedor from "../helpers/EsVendedor.js";
+import {emailNuevoIntersado} from "../helpers/Emails.js";
 
 const envioMensaje = async (req, res) => {
     const requestBody = req.body;
@@ -51,6 +52,16 @@ const envioMensaje = async (req, res) => {
     try {
         const mensajeCreado = await Mensaje.create({mensaje, usuario_id: usuario_envia, propiedad_id});
         if (mensajeCreado) {
+            const cookie = req.cookies.token;
+            const token = jwt.verify(cookie, process.env.JWT_SECRET);
+            const id = token.id;
+
+            const usuario = await Usuario.findByPk(id);
+            const datos = {
+                email: usuario.email,
+                nombre: usuario.nombre,
+            }
+            emailNuevoIntersado(datos)
             res.render("../views/propiedades/mostrar", {
                 propiedad,
                 barra: true,

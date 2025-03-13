@@ -533,8 +533,13 @@ const verMensajes = async (req, res) => {
 
     res.render("propiedades/mensajes", {
         barra: true,
-        mensajes: mensajesDeLaPropiedad
+        mensajes: mensajesDeLaPropiedad,
+        pagina: "Mensajes"
     })
+}
+
+const volver = (req, res) =>{
+    res.redirect("back");
 }
 
 export {
@@ -547,5 +552,6 @@ export {
     eliminarPropiedad,
     actualizarPropiedad,
     mostrarPropiedad,
-    verMensajes
+    verMensajes,
+    volver
 }

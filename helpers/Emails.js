@@ -57,7 +57,31 @@ const emailRecuperarPassword = async (datos) =>{
         `
     });
 }
+
+const emailNuevoIntersado = async (datos) =>{
+    const {email, nombre} = datos;
+
+    const transport = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        auth:{
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+
+    await transport.sendMail({
+        from: "BIENES RAICES",
+        to: email,
+        subject: "HAY ALGUIEN INTERESADO EN TU PROPIEDAD",
+        text: "HAY ALGUIEN INTERESADO EN TU PROPIEDAD",
+        html: `
+            Hola ${nombre}, hay alguien nuevo interesado en una de tu propiedadess, corre a ver quien es! : )
+        `
+    });
+}
 export {
     emailRegistro,
-    emailRecuperarPassword
+    emailRecuperarPassword,
+    emailNuevoIntersado
 }
