@@ -12,7 +12,8 @@ import {
     editarPropiedadFormulario,
     actualizarPropiedad,
     eliminarPropiedad,
-    mostrarPropiedad
+    mostrarPropiedad,
+    verMensajes
 } from "../controllers/propiedadController.js";
 
 //Rutas protegidad para usuario en sesion
@@ -24,6 +25,7 @@ router.post("/propiedades/guardar_imagen/:id", protegerRuta, upload.single('imag
 router.get("/editar-propiedad/:id", protegerRuta, editarPropiedadFormulario);
 router.post("/actualizar-propiedad", protegerRuta, actualizarPropiedad);
 router.get("/eliminar-propiedad/:id", protegerRuta, eliminarPropiedad);
+router.get("/mensajes/:id", protegerRuta, verMensajes);
 
 //Rutas de area publica
 router.get('/propiedad/:id', mostrarPropiedad);

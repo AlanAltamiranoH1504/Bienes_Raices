@@ -3,7 +3,7 @@ import {unlink} from "node:fs/promises"
 import precioModelo from "../models/Precio.js";
 import usuarioSesion from "../helpers/UsuarioSesion.js";
 import jwt from "jsonwebtoken";
-import {Categoria, Precio, Propiedad} from "../models/index.js";
+import {Categoria, Mensaje, Precio, Propiedad} from "../models/index.js";
 import Usuario from "../models/Usuario.js";
 import esVendedor from "../helpers/EsVendedor.js";
 
@@ -16,13 +16,13 @@ const admin = async (req, res) => {
     //Leemos el queryString
     const {pagina: paginaActual} = req.query;
     const expresion = /^[0-9]$/
-    if(!expresion.test(paginaActual)){
+    if (!expresion.test(paginaActual)) {
         console.log("No pasa la validacion");
         return res.redirect('/mis-propiedades?pagina=1')
     }
 
     //Realizamos la consulta con paginacion
-    try{
+    try {
         const limit = 3;
         const offset = (paginaActual * limit) - limit;
 
@@ -35,9 +35,9 @@ const admin = async (req, res) => {
                 {model: Precio, attributes: ['id', 'nombre']},
             ]
         });
-        const cantidadPropiedades = await Propiedad.count({where: {usuario_id:id}});
+        const cantidadPropiedades = await Propiedad.count({where: {usuario_id: id}});
         const cantidadPaginas = Math.ceil(cantidadPropiedades / limit);
-        console.log(cantidadPaginas)
+
         res.render("propiedades/admin", {
             pagina: "Mis propiedades",
             barra: true,
@@ -48,7 +48,7 @@ const admin = async (req, res) => {
             offset: offset,
             limit: limit,
         });
-    }catch (e){
+    } catch (e) {
         console.log("ERROR: " + e.message);
     }
 }
@@ -492,15 +492,15 @@ const mostrarPropiedad = async (req, res) => {
         return;
     }
 
-    if(!cookie){
+    if (!cookie) {
         console.log("No existe la cookie con el token. Debe iniciar sesion");
         iniciarSesion = true;
-    }else{
+    } else {
         console.log("Existe la cookie en el token")
         const token = jwt.verify(cookie, process.env.JWT_SECRET);
-        if (!token.id){
+        if (!token.id) {
             iniciarSesion = true;
-        }else {
+        } else {
             const id = token.id;
             usuario = await Usuario.findByPk(id);
             iniciarSesion = false;
@@ -520,6 +520,23 @@ const mostrarPropiedad = async (req, res) => {
     });
 }
 
+const verMensajes = async (req, res) => {
+    const id = req.params.id;
+    const mensajesDeLaPropiedad = await Mensaje.findAll({
+        where: {
+            propiedad_id: id
+        },
+        include: [
+            {model: Usuario, attributes: ['nombre', 'email']}
+        ]
+    });
+
+    res.render("propiedades/mensajes", {
+        barra: true,
+        mensajes: mensajesDeLaPropiedad
+    })
+}
+
 export {
     admin,
     formCrearPropiedad,
@@ -529,5 +546,6 @@ export {
     editarPropiedadFormulario,
     eliminarPropiedad,
     actualizarPropiedad,
-    mostrarPropiedad
+    mostrarPropiedad,
+    verMensajes
 }
