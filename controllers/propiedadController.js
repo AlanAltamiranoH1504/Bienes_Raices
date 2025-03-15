@@ -541,7 +541,41 @@ const verMensajes = async (req, res) => {
     })
 }
 
-const volver = (req, res) =>{
+const volver = (req, res) => {
+    res.redirect("back");
+}
+
+const cambiarEstado = async (req, res) => {
+    const requestParams = req.params;
+    const {estado, id} = requestParams;
+
+    //Verificamos que la propiedad exista
+    const propiedadModificar = await Propiedad.findOne({
+        where: {id},
+       include: [
+           {model: Precio, attributes: ['id', 'nombre']},
+           {model: Categoria, attributes: ['id', 'nombre']}
+       ]
+    });
+    if(!propiedadModificar){
+        console.log("La propiedad no existe")
+        return;
+    }
+
+    //Verificamos que la propiedad sea del usuario en sesion
+    const cookie = req.cookies.token;
+    const token = jwt.verify(cookie, process.env.JWT_SECRET);
+    const idUsuario = token.id;
+    const usuarioInSession = await Usuario.findOne({where: {id: idUsuario}});
+    if (usuarioInSession.id !== propiedadModificar.usuario_id){
+        console.log("La propiedad no es del usuaruo en sesion")
+    }
+
+    //Cambiamos estado de la propiedad
+    const estadoDb = propiedadModificar.publicado;
+    propiedadModificar.publicado = !estadoDb;
+    await propiedadModificar.save();
+    console.log("Propiedad actualizada");
     res.redirect("back");
 }
 
@@ -556,5 +590,6 @@ export {
     actualizarPropiedad,
     mostrarPropiedad,
     verMensajes,
-    volver
+    volver,
+    cambiarEstado
 }

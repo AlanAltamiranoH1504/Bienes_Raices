@@ -28,8 +28,7 @@ block contenido
                                             span(class="mx-2")
                                              p(class="text-sm text-black font-bold")=propiedad.precio.nombre
                                     div(class="sm:w-1/4 md:w-2/6 lg:w-1/6")
-                                        //p(class=`px-2 py-2 md:py-1 uppercase leading-5 font-semibold rounded-sm`)
-                                        form(action="#")
+                                        form(action=`/estado/${propiedad.publicado}/${propiedad.id}`)
                                             input(type="submit" class=`px-2 py-2 uppercase leading-5 block w-full font-bold rounded ${propiedad.publicado ? 'bg-green-300 hover:bg-green-400 text-green-800' : 'bg-red-300 hover:bg-red-400 text-red-800'}`, value=`${propiedad.publicado ? 'Publicado': 'No Publicado'}`)
                                         a(href=`/editar-propiedad/${propiedad.id}`, class="uppercase font-bold text-center block py-1 bg-indigo-300 text-indigo-600 rounded hover:bg-indigo-400 my-2") Editar
                                         a(href=`/eliminar-propiedad/${propiedad.id}`, class="uppercase font-bold text-center py-1 block bg-red-300 text-red-600 rounded hover:bg-red-400") Eliminar
