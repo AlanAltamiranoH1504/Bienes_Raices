@@ -8,7 +8,8 @@ import {
     recuperarPassword,
     formularioRecuperacion,
     actualizarPassword,
-    validacionLogion
+    validacionLogion,
+    cerrarSesion
 } from "../controllers/usuarioController.js";
 const router = express.Router();
 

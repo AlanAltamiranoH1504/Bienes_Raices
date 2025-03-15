@@ -17,6 +17,7 @@ import {
     volver,
     cambiarEstado
 } from "../controllers/propiedadController.js";
+import {cerrarSesion} from "../controllers/usuarioController.js";
 
 //Rutas protegidad para usuario en sesion
 router.get("/mis-propiedades", protegerRuta, admin);
@@ -30,6 +31,7 @@ router.get("/eliminar-propiedad/:id", protegerRuta, eliminarPropiedad);
 router.get("/mensajes/:id", protegerRuta, verMensajes);
 router.get("/estado/:estado/:id", protegerRuta, cambiarEstado);
 router.get("/volver", protegerRuta, volver)
+router.get("/cerrar-sesion", cerrarSesion)
 
 //Rutas de area publica
 router.get('/propiedad/:id', mostrarPropiedad);

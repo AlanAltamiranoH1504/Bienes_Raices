@@ -67,7 +67,7 @@ const saveUsuario = async (req, res) => {
     } else {
         //Hasheamos la password
         const passwordHash = await bcrypt.hash(password, 10);
-        const usuarioGuardar = await usuario.create({nombre, email, password: passwordHash, token:generarId()});
+        const usuarioGuardar = await usuario.create({nombre, email, password: passwordHash, token: generarId()});
         //Enviamos email de confirmacion
         emailRegistro(usuarioGuardar)
 
@@ -79,12 +79,12 @@ const saveUsuario = async (req, res) => {
     }
 }
 
-const confirmar = async (req, res) =>{
+const confirmar = async (req, res) => {
     const token = req.params.token;
     //Confirmamos el token
     const usuarioParaConfirmar = await usuario.findOne({where: {token: token}});
     //Actualizamos ese usuario con ese token
-    if (usuarioParaConfirmar !== null){
+    if (usuarioParaConfirmar !== null) {
         usuarioParaConfirmar.confirmado = true;
         usuarioParaConfirmar.token = null;
         await usuarioParaConfirmar.save();
@@ -92,7 +92,7 @@ const confirmar = async (req, res) =>{
             respuesta: "CUENTA CONFIRMADA CON EXITO!",
             pagina: "Confirmacion"
         });
-    }else{
+    } else {
         res.render("auth/confirmar-error", {
             respuesta: "TOKEN NO VALIDO",
             pagina: "Confirmacion"
@@ -100,10 +100,10 @@ const confirmar = async (req, res) =>{
     }
 }
 
-const recuperarPassword = async (req, res) =>{
+const recuperarPassword = async (req, res) => {
     const emailRequest = req.body.email;
     const usuarioExistente = await usuario.findOne({where: {email: emailRequest}});
-    if (usuarioExistente !== null){
+    if (usuarioExistente !== null) {
         const token = generarId();
         usuarioExistente.token = token;
         usuarioExistente.save();
@@ -116,7 +116,7 @@ const recuperarPassword = async (req, res) =>{
             error: false,
             csrf: req.csrfToken()
         })
-    }else{
+    } else {
         res.render("auth/olvide-password", {
             pagina: "Recupera tu password",
             mensaje: "No hay ningun usuario registrado con ese email",
@@ -126,18 +126,18 @@ const recuperarPassword = async (req, res) =>{
     }
 }
 
-const formularioRecuperacion = async (req, res) =>{
+const formularioRecuperacion = async (req, res) => {
     const tokenRequest = req.params.token;
     const usuarioExistente = await usuario.findOne({where: {token: tokenRequest}});
-    if (usuarioExistente !== null){
-        usuarioExistente.token= null;
+    if (usuarioExistente !== null) {
+        usuarioExistente.token = null;
         usuarioExistente.save();
         res.render("auth/formulario-recuperacion", {
             pagina: "Recuperacion de mi Password",
             csrf: req.csrfToken(),
             email: usuarioExistente.email
         })
-    }else{
+    } else {
         res.render("auth/formulario-recuperacion", {
             pagina: "Recuperacion de mi Password",
             csrf: req.csrfToken(),
@@ -147,7 +147,7 @@ const formularioRecuperacion = async (req, res) =>{
     }
 }
 
-const actualizarPassword = async (req, res) =>{
+const actualizarPassword = async (req, res) => {
     const {email, password1, password2} = req.body;
     const passwordHash = await bcrypt.hash(password1, 10);
     await usuario.update({password: passwordHash}, {where: {email}});
@@ -159,9 +159,9 @@ const actualizarPassword = async (req, res) =>{
     })
 }
 
-const validacionLogion = async (req, res) =>{
+const validacionLogion = async (req, res) => {
     const {email, password} = req.body;
-    if (email.trim() === "" || email == null || password.trim() === "" || password == null){
+    if (email.trim() === "" || email == null || password.trim() === "" || password == null) {
         res.render("auth/login", {
             error: true,
             mensaje: "Los campos son obligatorios",
@@ -173,7 +173,7 @@ const validacionLogion = async (req, res) =>{
 
     const usuarioExistente = await usuario.findOne({where: {email: email}});
     //Compramos que existe el usuario y que este confirmado
-    if (usuarioExistente === null){
+    if (usuarioExistente === null) {
         res.render("auth/login", {
             error: true,
             mensaje: "Usuario no existente",
@@ -182,7 +182,7 @@ const validacionLogion = async (req, res) =>{
         });
         return;
     }
-    if(usuarioExistente.confirmado == false || usuarioExistente.confirmado == null){
+    if (usuarioExistente.confirmado == false || usuarioExistente.confirmado == null) {
         res.render("auth/login", {
             error: true,
             mensaje: "No has confirmado tu cuenta",
@@ -193,9 +193,9 @@ const validacionLogion = async (req, res) =>{
     }
 
     //Si el usuario existe y ya tiene confirmada su cuenta
-    if (usuarioExistente && usuarioExistente.confirmado === true){
+    if (usuarioExistente && usuarioExistente.confirmado === true) {
         const correctPassword = await bcrypt.compare(password, usuarioExistente.password);
-        if (correctPassword){
+        if (correctPassword) {
             //Generamos y guardamos el JWT en una cookie
             const token = generaJWT(usuarioExistente.id);
             res.cookie("token", token, {
@@ -203,7 +203,7 @@ const validacionLogion = async (req, res) =>{
                 secure: true,
                 maxAge: 1000 * 60 * 60
             }).redirect("/mis-propiedades");
-        }else{
+        } else {
             res.render("auth/login", {
                 error: true,
                 mensaje: "Tu password es incorrecta",
@@ -215,6 +215,11 @@ const validacionLogion = async (req, res) =>{
     }
 }
 
+const cerrarSesion = (req, res) => {
+    res.clearCookie("token");
+    res.redirect("auth/login");
+}
+
 export {
     formularioLogion,
     formularioRegistro,
@@ -224,5 +229,6 @@ export {
     recuperarPassword,
     formularioRecuperacion,
     actualizarPassword,
-    validacionLogion
+    validacionLogion,
+    cerrarSesion
 }
