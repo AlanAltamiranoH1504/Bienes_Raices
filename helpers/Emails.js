@@ -17,17 +17,30 @@ const emailRegistro = async (datos) => {
 
     //Enviamos el email
     await transport.sendMail({
-        from: "Bienes Raicees",
+        from: "Bienes Raices <no-reply@bienesraices.com>",
         to: email,
         subject: "CONFIRMA TU CUENTA EN BIENES RAICES",
-        text: "CONFIRMA TU CUENTA EN BIENES RAICES",
+        text: "Confirma tu cuenta en Bienes Raíces",
         html: `
-            <p>Hola ${nombre}, confirma tu cuenta en Bienes Raices</p>
-            <p>Tu cuenta ya se encuentra lista, solo debes confirmarla en el siguiente enlace:
-                <a href="${process.env.BACKEND_URL}/auth/confirmar/${token}">Confirmar Cuenta</a>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f8f8f8; border-radius: 10px;">
+            <h2 style="color: #2c3e50;">Hola ${nombre},</h2>
+            <p style="font-size: 16px; color: #333;">
+                Gracias por registrarte en <strong>Bienes Raíces</strong>. Para activar tu cuenta, por favor confirma tu dirección de correo electrónico haciendo clic en el siguiente enlace:
             </p>
-            <p>Si no has sido tú, por favor ignora este correo : )</p>
-        `
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.BACKEND_URL}/auth/confirmar/${token}" 
+                   style="display: inline-block; padding: 12px 25px; background-color: #3498db; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                    Confirmar Cuenta
+                </a>
+            </p>
+            <p style="font-size: 14px; color: #666;">
+                Si tú no creaste esta cuenta, puedes ignorar este mensaje sin problemas.
+            </p>
+            <p style="font-size: 14px; color: #999; margin-top: 40px;">
+                &copy; ${new Date().getFullYear()} Bienes Raíces. Todos los derechos reservados.
+            </p>
+        </div>
+    `
     });
 }
 
@@ -44,17 +57,30 @@ const emailRecuperarPassword = async (datos) =>{
 
     //Enviamos el email
     await transport.sendMail({
-        from: "BIENES RAICES",
+        from: "Bienes Raíces <no-reply@bienesraices.com>",
         to: email,
         subject: "RECUPERAR PASSWORD",
-        text: "RECUPERAR PASSWORD",
+        text: "Recuperar tu contraseña en Bienes Raíces",
         html: `
-            <p>
-                Hola ${nombre}, por favor ingresa el siguiente link para recuperar tu password:
-                <a href="${process.env.BACKEND_URL}/auth/recuperar/${token}">Recuperar Password</a>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f8f8f8; border-radius: 10px;">
+            <h2 style="color: #2c3e50;">Hola ${nombre},</h2>
+            <p style="font-size: 16px; color: #333;">
+                Hemos recibido una solicitud para restablecer tu contraseña en <strong>Bienes Raíces</strong>. Puedes hacerlo haciendo clic en el siguiente enlace:
             </p>
-            <p>Si tú no solicitates la recuperacion de tu password, por favor ignora este correo : )</p>
-        `
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.BACKEND_URL}/auth/recuperar/${token}" 
+                   style="display: inline-block; padding: 12px 25px; background-color: #e67e22; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                    Recuperar Password
+                </a>
+            </p>
+            <p style="font-size: 14px; color: #666;">
+                Si tú no solicitaste este cambio, puedes ignorar este mensaje.
+            </p>
+            <p style="font-size: 14px; color: #999; margin-top: 40px;">
+                &copy; ${new Date().getFullYear()} Bienes Raíces. Todos los derechos reservados.
+            </p>
+        </div>
+    `
     });
 }
 
@@ -71,13 +97,24 @@ const emailNuevoIntersado = async (datos) =>{
     });
 
     await transport.sendMail({
-        from: "BIENES RAICES",
+        from: "Bienes Raíces <no-reply@bienesraices.com>",
         to: email,
-        subject: "HAY ALGUIEN INTERESADO EN TU PROPIEDAD",
-        text: "HAY ALGUIEN INTERESADO EN TU PROPIEDAD",
+        subject: "¡Hay alguien interesado en tu propiedad!",
+        text: "Hay alguien interesado en tu propiedad en Bienes Raíces.",
         html: `
-            Hola ${nombre}, hay alguien nuevo interesado en una de tu propiedadess, corre a ver quien es! : )
-        `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f8f8f8; border-radius: 10px;">
+            <h2 style="color: #2c3e50;">Hola ${nombre},</h2>
+            <p style="font-size: 16px; color: #333;">
+                ¡Hay alguien nuevo interesado en una de tus propiedades!
+            </p>
+            <p style="font-size: 16px; color: #333;">
+                Corre a ver quién es 😊
+            </p>
+            <p style="font-size: 14px; color: #999; margin-top: 40px;">
+                &copy; ${new Date().getFullYear()} Bienes Raíces. Todos los derechos reservados.
+            </p>
+        </div>
+    `
     });
 }
 export {

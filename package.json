@@ -24,6 +24,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.20",
     "bcrypt": "^5.1.1",
+    "bienes_raices_mvc": "file:",
     "cookie-parser": "^1.4.7",
     "csurf": "^1.10.0",
     "dotenv": "^16.4.7",
